@@ -1,23 +1,22 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { UserButton } from '@clerk/clerk-react';
-import { supabase } from '../../config/supabaseConfig'; 
+import { supabase } from '../config/supabaseConfig'; 
 
-const Admin = () => {
+const PublicStore = () => {
   const { slug } = useParams();
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStoreData = async () => {
+    const fetchStore = async () => {
       const { data, error } = await supabase
         .from('personal_data')
         .select('*')
-        .eq('admin_url', `/admin/${slug}`)
+        .eq('public_url', `/${slug}`)
         .single();
 
       if (error) {
-        console.error('❌ Error cargando datos del admin:', error);
+        console.error('❌ Error cargando datos públicos:', error);
       } else {
         setStore(data);
       }
@@ -25,24 +24,23 @@ const Admin = () => {
       setLoading(false);
     };
 
-    fetchStoreData();
+    fetchStore();
   }, [slug]);
 
-  if (loading) return <div>Cargando datos del comercio...</div>;
+  if (loading) return <div>Cargando tienda...</div>;
 
-  if (!store) return <div>No se encontraron datos para este admin.</div>;
+  if (!store) return <div>No se encontró esta tienda.</div>;
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Panel Admin: {store.brand_name}</h1>
+      <h1 className="text-3xl font-bold mb-4">{store.brand_name}</h1>
       <p><strong>Dirección:</strong> {store.address}</p>
       <p><strong>Teléfono:</strong> {store.phone}</p>
       <p><strong>Horario:</strong> {store.opening_hours}</p>
-      <div className="mt-6">
-        <UserButton afterSignOutUrl="/login" />
-      </div>
+      {/* Acá más adelante vas a listar productos */}
     </div>
   );
 };
 
-export default Admin;
+export default PublicStore;
+

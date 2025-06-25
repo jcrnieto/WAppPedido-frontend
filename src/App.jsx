@@ -1,17 +1,19 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import LayoutAdmin from './layout/LayoutAdmin';
+import { SignedIn, SignedOut } from '@clerk/clerk-react';
+
 import LayoutMain from './layout/LayoutMain';
-import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 import Home from './page/Home';
 import Login from './page/Login';
+import PostLoginRedirect from './page/PostLoginRedirect';
+import FormDataPersonal from './page/admin/FormDataPersonal';
 import Admin from './page/admin/Admin';
-
-import { useLocalStorage } from 'react-use';
+import Register from './page/Register';
+import PublicStore from './page/PublicStore';
 
 function App() {
-  const [user] = useLocalStorage('user')
+
 
   return (
     <>
@@ -21,14 +23,42 @@ function App() {
             <Route path="/" element={<Home />} />
           </Route>
 
-          <Route path="/login" element={<Login />} />
+          <Route path="/login/*" element={<Login />} />
+          <Route path="/register/*" element={<Register />} />
+          <Route path="/post-login" element={<PostLoginRedirect />} />
 
-          <Route element={<ProtectedRoute canActivate={user} />} >
-            <Route element={<LayoutAdmin />}>
-              <Route path="/admin" element={<Admin />} />
+          {/* <Route
+            path="/admin"
+            element={
+              <SignedIn>
+                <Admin />
+              </SignedIn>
+            }
+          /> */}
 
-            </Route>
-          </Route>
+          <Route
+            path="/completar-perfil"
+            element={
+              <SignedIn>
+                <FormDataPersonal />
+              </SignedIn>
+            }
+          />
+
+          <Route
+            path="/admin/:slug"
+            element={
+              <SignedIn>
+                <Admin />
+              </SignedIn>
+            }
+          />
+
+          <Route
+            path="/:slug"
+            element={<PublicStore />} 
+          />
+
         </Routes>
       </Router>
     </>
