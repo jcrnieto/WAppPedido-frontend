@@ -1,13 +1,18 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/clerk-react';
-import { supabase } from '../../config/supabaseConfig'; 
+import { supabase } from '../../config/supabaseConfig';
+
+import DataPersonal from './DataPersonal';
+import PostProduct from './PostProduct';
+import BusinessHours from './BusinessHours';
+import AdditionalInformation from './AdditionalInformation';
 
 const Admin = () => {
   const { slug } = useParams();
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchStoreData = async () => {
       const { data, error } = await supabase
@@ -33,14 +38,20 @@ const Admin = () => {
   if (!store) return <div>No se encontraron datos para este admin.</div>;
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Panel Admin: {store.brand_name}</h1>
-      <p><strong>Dirección:</strong> {store.address}</p>
-      <p><strong>Teléfono:</strong> {store.phone}</p>
-      <p><strong>Horario:</strong> {store.opening_hours}</p>
-      <div className="mt-6">
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow p-4 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-blue-600">Panel de {store.brand_name}</h1>
         <UserButton afterSignOutUrl="/login" />
-      </div>
+      </header>
+
+      {/* Main content */}
+      <main className="p-6 max-w-4xl mx-auto space-y-8">
+        <DataPersonal store={store} />
+        <BusinessHours storeId={store.id} />
+        <AdditionalInformation storeId={store.id}/>
+        <PostProduct />
+      </main>
     </div>
   );
 };

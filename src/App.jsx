@@ -27,15 +27,6 @@ function App() {
           <Route path="/register/*" element={<Register />} />
           <Route path="/post-login" element={<PostLoginRedirect />} />
 
-          {/* <Route
-            path="/admin"
-            element={
-              <SignedIn>
-                <Admin />
-              </SignedIn>
-            }
-          /> */}
-
           <Route
             path="/completar-perfil"
             element={

@@ -12,8 +12,7 @@ const FormDataPersonal = () => {
         phone: '',
         address: '',
         city: '',
-        brand_name: '',
-        opening_hours: '',
+        brand_name: '',        
     });
 
     const handleChange = (e) => {
@@ -52,7 +51,6 @@ const FormDataPersonal = () => {
                 address: form.address,
                 city: form.city,
                 brand_name: form.brand_name,
-                opening_hours: form.opening_hours,
             });
 
             console.log('✅ Datos guardados en Supabase:', response.data);
@@ -76,7 +74,6 @@ const FormDataPersonal = () => {
                 <input name="address" placeholder="Dirección" onChange={handleChange} required />
                 <input name="city" placeholder="Ciudad" onChange={handleChange} required />
                 <input name="brand_name" placeholder="Nombre del comercio" onChange={handleChange} required />
-                <input name="opening_hours" placeholder="Horario de atención" onChange={handleChange} required />
                 <button type="submit" className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                     Guardar y continuar
                 </button>
