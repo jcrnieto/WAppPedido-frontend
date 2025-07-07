@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { supabase } from '../../config/supabaseConfig';
+import axios from 'axios';
+//import { supabase } from '../../config/supabaseConfig';
+
 
 const DataPersonal = ({ store }) => {
   const [formData, setFormData] = useState({
@@ -25,22 +27,22 @@ const DataPersonal = ({ store }) => {
   const handleUpdate = async () => {
     setLoading(true);
     setSuccess(false);
+    console.log('📝 Actualizando datos:', formData);
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/api/personalData/updatePersonalData/${store.id}`,
+        { ...formData, id: store.id }
+      );
 
-    const { error } = await supabase
-      .from('personal_data')
-      .update(formData)
-      .eq('id', store.id);
-
-    setLoading(false);
-
-    if (error) {
-      console.error('❌ Error actualizando datos:', error);
-      return;
+      console.log('✅', response.data.message);
+      setSuccess(true);
+    } catch (error) {
+      console.error('❌ Error actualizando datos:', error.response?.data?.message || error.message);
+      alert('Error al guardar los datos. Verificá que la dirección y ciudad sean correctas.');
+    } finally {
+      setLoading(false);
     }
-
-    setSuccess(true);
-    console.log('✅ Datos actualizados correctamente');
-  };
+ };
 
   return (
     <div className="bg-white rounded shadow p-4 mb-6">

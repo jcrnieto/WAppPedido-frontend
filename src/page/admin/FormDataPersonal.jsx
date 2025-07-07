@@ -6,13 +6,13 @@ import axios from 'axios';
 const FormDataPersonal = () => {
     const { user } = useUser();
     const email = user?.emailAddresses?.[0]?.emailAddress;
-
+    console.log('este es el email',email)
     const [form, setForm] = useState({
         full_name: '',
         phone: '',
         address: '',
         city: '',
-        brand_name: '',        
+        brand_name: '',
     });
 
     const handleChange = (e) => {
@@ -45,7 +45,7 @@ const FormDataPersonal = () => {
             console.log('user', user);
 
             const response = await axios.post('http://localhost:3000/api/personalData/createPersonalData', {
-                id: supabaseUserId,
+                user_id: supabaseUserId,
                 full_name: form.full_name,
                 phone: form.phone,
                 address: form.address,
@@ -66,18 +66,20 @@ const FormDataPersonal = () => {
         }
     };
     return (
-        <div className="p-6 max-w-md mx-auto bg-gray-100">
-            <h1 className="text-xl font-bold mb-4">Formulario de datos personales</h1>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                <input name="full_name" placeholder="Nombre completo" onChange={handleChange} required />
-                <input name="phone" placeholder="Teléfono" onChange={handleChange} required />
-                <input name="address" placeholder="Dirección" onChange={handleChange} required />
-                <input name="city" placeholder="Ciudad" onChange={handleChange} required />
-                <input name="brand_name" placeholder="Nombre del comercio" onChange={handleChange} required />
-                <button type="submit" className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                    Guardar y continuar
-                </button>
-            </form>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="p-6 max-w-md w-full bg-white shadow-md rounded">
+                <h1 className="text-xl font-bold mb-4 text-center">Formulario de datos personales</h1>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                    <input name="full_name" placeholder="Nombre completo" onChange={handleChange} required className="border p-2 rounded" />
+                    <input name="phone" placeholder="Teléfono" onChange={handleChange} required className="border p-2 rounded" />
+                    <input name="address" placeholder="Dirección" onChange={handleChange} required className="border p-2 rounded" />
+                    <input name="city" placeholder="Ciudad" onChange={handleChange} required className="border p-2 rounded" />
+                    <input name="brand_name" placeholder="Nombre del comercio" onChange={handleChange} required className="border p-2 rounded" />
+                    <button type="submit" className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                        Guardar y continuar
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

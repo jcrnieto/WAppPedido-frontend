@@ -3,34 +3,45 @@ import axios from 'axios';
 import { supabase } from '../../config/supabaseConfig';
 
 const AdditionalInformation = ({ storeId }) => {
+  console.log('storeId:', storeId);
   const [logoFile, setLogoFile] = useState(null);
   const [logoUrl, setLogoUrl] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [socialLinks, setSocialLinks] = useState(['', '', '']);
   const [loading, setLoading] = useState(false);
+  const [infoExists, setInfoExists] = useState(false);
+
 
   // 🔄 Traer datos actuales si existen
   useEffect(() => {
-    const fetchData = async () => {
-      if (!storeId) return;
+  const fetchData = async () => {
+    if (!storeId) return;
 
-      try {
-        const { data } = await axios.get(
-          `http://localhost:3000/api/additionalInformation/getAdditionalInformationByUser/${storeId}`
-        );
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/additionalInformation/getAdditionalInformationByUser/${storeId}`
+      );
 
-        if (data) {
-          setWhatsapp(data.whatsapp || '');
-          setLogoUrl(data.logo_url || '');
-          setSocialLinks(data.social_links || ['', '', '']);
-        }
-      } catch (error) {
+      if (data) {
+        const rawWhatsapp = data.whatsapp?.match(/549(\d{10,11})$/)?.[1] || '';
+        setWhatsapp(rawWhatsapp);
+        setLogoUrl(data.logo_url || '');
+        setSocialLinks(data.social_links || ['', '', '']);
+        setInfoExists(true);
+      }
+    } catch (error) {
+      if (error.response?.status === 404) {
+        setInfoExists(false);
+        console.log('ℹ️ No hay información adicional aún para este usuario');
+      } else {
         console.error('❌ Error al cargar info adicional:', error.response?.data || error.message);
       }
-    };
+    }
+  };
 
-    fetchData();
-  }, [storeId]);
+  fetchData();
+}, [storeId]);
+
 
   const handleLogoChange = (e) => {
     setLogoFile(e.target.files[0]);
@@ -75,14 +86,25 @@ const AdditionalInformation = ({ storeId }) => {
         setLogoUrl(imageUrl); // Para mostrarla en pantalla si querés
       }
 
+      if (!/^\d{10,11}$/.test(whatsapp)) {
+        alert('El número de WhatsApp debe tener entre 10 y 11 dígitos y no debe incluir el 0 ni el 15.');
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         user_id: storeId,
-        whatsapp,
+        whatsapp: `https://wa.me/549${whatsapp}`,
         logo_url: imageUrl,
         social_links: socialLinks.filter(link => link !== ''),
       };
 
-      await axios.post('http://localhost:3000/api/additionalInformation/createAdditionalInformation', payload);
+      if (infoExists) {      
+        await axios.patch(`http://localhost:3000/api/additionalInformation/updateAdditionalInformation/${storeId}`, payload);
+      } else {      
+        await axios.post('http://localhost:3000/api/additionalInformation/createAdditionalInformation', payload);
+        setInfoExists(true); 
+      }
 
       alert('✅ Información guardada correctamente');
     } catch (err) {
@@ -117,7 +139,7 @@ const AdditionalInformation = ({ storeId }) => {
           type="text"
           value={whatsapp}
           onChange={(e) => setWhatsapp(e.target.value)}
-          placeholder="Ej: https://wa.me/5491122334455"
+          placeholder="Ej: 1122334455"
           className="border p-2 w-full rounded"
         />
       </div>

@@ -4,13 +4,13 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 import LayoutMain from './layout/LayoutMain';
-import Home from './page/Home';
-import Login from './page/Login';
-import PostLoginRedirect from './page/PostLoginRedirect';
+import Home from './page/home/Home';
+import Login from './page/home/Login';
+import PostLoginRedirect from './page/publicStore/PostLoginRedirect';
 import FormDataPersonal from './page/admin/FormDataPersonal';
 import Admin from './page/admin/Admin';
-import Register from './page/Register';
-import PublicStore from './page/PublicStore';
+import Register from './page/home/Register';
+import PublicStore from './page/publicStore/PublicStore';
 
 function App() {
 

@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/clerk-react';
 import { supabase } from '../../config/supabaseConfig';
 
-import DataPersonal from './DataPersonal';
+import DataPersonal from '../../components/admin/DataPersonal';
 import PostProduct from './PostProduct';
-import BusinessHours from './BusinessHours';
-import AdditionalInformation from './AdditionalInformation';
+import BusinessHours from '../../components/admin/BusinessHours';
+import AdditionalInformation from '../../components/admin/AdditionalInformation';
 
 const Admin = () => {
   const { slug } = useParams();
@@ -36,7 +36,7 @@ const Admin = () => {
   if (loading) return <div>Cargando datos del comercio...</div>;
 
   if (!store) return <div>No se encontraron datos para este admin.</div>;
-
+  //console.log('📦 Datos del comercio:', store.user_id);
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -49,7 +49,7 @@ const Admin = () => {
       <main className="p-6 max-w-4xl mx-auto space-y-8">
         <DataPersonal store={store} />
         <BusinessHours storeId={store.id} />
-        <AdditionalInformation storeId={store.id}/>
+        <AdditionalInformation storeId={store.user_id}/>
         <PostProduct />
       </main>
     </div>
