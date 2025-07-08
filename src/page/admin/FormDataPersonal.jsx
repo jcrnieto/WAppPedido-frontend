@@ -13,6 +13,7 @@ const FormDataPersonal = () => {
         address: '',
         city: '',
         brand_name: '',
+        auth_user_id:'',
     });
 
     const handleChange = (e) => {
@@ -51,6 +52,7 @@ const FormDataPersonal = () => {
                 address: form.address,
                 city: form.city,
                 brand_name: form.brand_name,
+                auth_user_id: user.id,
             });
 
             console.log('✅ Datos guardados en Supabase:', response.data);

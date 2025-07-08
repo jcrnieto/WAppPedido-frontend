@@ -34,14 +34,16 @@ const PostLoginRedirect = () => {
         console.error('❌ No se pudo obtener el usuario');
         return;
       }
-
+      console.log('🟢 Usuario verificado/registrado:', userData);
       console.log('userId:', userData.id);
       console.log('profileCompleted:', userData.profile_completed);
-      console.log('personalData:', userData.personalData?.admin_url);
+      console.log('personalData:', userData.personalData?.[0]);
+
+      const personalDataEntry = userData.personalData?.[0];
       
       // 3. Redireccionar según estado del perfil
-      if (userData.profile_completed && userData.personalData?.admin_url) {
-        navigate(userData.personalData.admin_url);
+      if (userData.profile_completed && personalDataEntry?.admin_url) {
+        navigate(personalDataEntry?.admin_url);
       } else {
         navigate('/completar-perfil');
       }
