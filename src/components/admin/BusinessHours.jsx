@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useState } from 'react';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const dayTranslation = {
   'Lunes': 'Monday',
   'Martes': 'Tuesday',
@@ -103,7 +105,7 @@ const BusinessHours = ({ storeId }) => {
     try {
       const transformed = transformSchedule();
 
-      const response = await axios.post('http://localhost:3000/api/businessHours/createBusinessHours', {
+      const response = await axios.post(`${baseUrl}/businessHours/createBusinessHours`, {
         user_id: storeId,
         hours: transformed,
       });

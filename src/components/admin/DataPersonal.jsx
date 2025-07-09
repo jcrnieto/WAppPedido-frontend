@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-//import { supabase } from '../../config/supabaseConfig';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const DataPersonal = ({ store }) => {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const DataPersonal = ({ store }) => {
     console.log('📝 Actualizando datos:', formData);
     try {
       const response = await axios.patch(
-        `http://localhost:3000/api/personalData/updatePersonalData/${store.id}`,
+        `${baseUrl}/personalData/updatePersonalData/${store.id}`,
         { ...formData, id: store.id }
       );
 

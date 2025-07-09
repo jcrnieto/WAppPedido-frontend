@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 import axios from 'axios';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const FormDataPersonal = () => {
     const { user } = useUser();
     const email = user?.emailAddresses?.[0]?.emailAddress;
@@ -33,7 +35,7 @@ const FormDataPersonal = () => {
         }
 
         try {
-            const { data } = await axios.get(`http://localhost:3000/api/users/by-email/${email}`);
+            const { data } = await axios.get(`${baseUrl}/users/by-email/${email}`);
             const supabaseUserId = data?.id;
 
             if (!supabaseUserId) {
@@ -45,7 +47,7 @@ const FormDataPersonal = () => {
             console.log('Form Data:', form);
             console.log('user', user);
 
-            const response = await axios.post('http://localhost:3000/api/personalData/createPersonalData', {
+            const response = await axios.post(`${baseUrl}/personalData/createPersonalData`, {
                 user_id: supabaseUserId,
                 full_name: form.full_name,
                 phone: form.phone,

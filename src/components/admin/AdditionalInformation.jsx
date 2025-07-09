@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { supabase } from '../../config/supabaseConfig';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const AdditionalInformation = ({ storeId }) => {
   console.log('storeId:', storeId);
   const [logoFile, setLogoFile] = useState(null);
@@ -19,7 +21,7 @@ const AdditionalInformation = ({ storeId }) => {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/api/additionalInformation/getAdditionalInformationByUser/${storeId}`
+        `${baseUrl}/additionalInformation/getAdditionalInformationByUser/${storeId}`
       );
 
       if (data) {
@@ -100,9 +102,9 @@ const AdditionalInformation = ({ storeId }) => {
       };
 
       if (infoExists) {      
-        await axios.patch(`http://localhost:3000/api/additionalInformation/updateAdditionalInformation/${storeId}`, payload);
+        await axios.patch(`${baseUrl}/additionalInformation/updateAdditionalInformation/${storeId}`, payload);
       } else {      
-        await axios.post('http://localhost:3000/api/additionalInformation/createAdditionalInformation', payload);
+        await axios.post(`${baseUrl}/additionalInformation/createAdditionalInformation`, payload);
         setInfoExists(true); 
       }
 

@@ -3,6 +3,8 @@ import { useUser } from '@clerk/clerk-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const PostLoginRedirect = () => {
   const { user } = useUser();
   const navigate = useNavigate();
@@ -19,14 +21,14 @@ const PostLoginRedirect = () => {
       // 1. Verificar si ya existe en tu tabla personalizada
       let userData;
       try {
-        const response = await axios.get(`http://localhost:3000/api/users/by-email/${email}`);
+        const response = await axios.get(`${baseUrl}/users/by-email/${email}`);
         userData = response.data;
         console.log('🟢 Usuario ya existe en Supabase');
       } catch (getError) {
         console.warn('⚠️ Usuario no encontrado. Registrando nuevo usuario...');
         
         // 2. Si no existe, lo registramos
-        const registerResponse = await axios.post('http://localhost:3000/api/users/register', { email });
+        const registerResponse = await axios.post(`${baseUrl}/users/register`, { email });
         userData = registerResponse.data;
       }
 
@@ -57,7 +59,12 @@ const PostLoginRedirect = () => {
   syncUser();
 }, [user, navigate, checked]);
 
-  return <div>Cargando...</div>;
+ return (
+  <div className="p-4 text-center">
+    <p className="text-sm">Cargando usuario...</p>
+    {/* <p className="text-xs text-gray-500">{email ? `Email: ${email}` : 'Sin email aún'}</p> */}
+  </div>
+);
 };
 
 export default PostLoginRedirect;
