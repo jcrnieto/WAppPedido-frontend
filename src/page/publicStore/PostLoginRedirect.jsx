@@ -9,7 +9,7 @@ const PostLoginRedirect = () => {
   const { user } = useUser();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
-
+  
   useEffect(() => {
   const syncUser = async () => {
     if (!user || checked) return;
@@ -21,7 +21,9 @@ const PostLoginRedirect = () => {
       // 1. Verificar si ya existe en tu tabla personalizada
       let userData;
       try {
+        console.log('esto es la baseUrl de render backend', baseUrl);
         const response = await axios.get(`${baseUrl}/users/by-email/${email}`);
+        console.log("🟠 Response del backend:", response);
         userData = response.data;
         console.log('🟢 Usuario ya existe en Supabase');
       } catch (getError) {
