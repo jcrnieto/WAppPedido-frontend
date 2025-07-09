@@ -22,6 +22,7 @@ const PostLoginRedirect = () => {
       let userData;
       try {
         console.log('esto es la baseUrl de render backend', baseUrl);
+        await new Promise(res => setTimeout(res, 500));
         const response = await axios.get(`${baseUrl}/users/by-email/${email}`);
         console.log("🟠 Response del backend:", response);
         userData = response.data;
