@@ -37,9 +37,19 @@ const NavbarUser = ({store, additionalData}) => {
     <>
       <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
         <div className="flex items-center justify-between px-4 py-3 md:px-8 md:py-4">
-          <h1 className="text-lg font-bold text-blue-600">
-            {store ? store.brand_name : 'Cargando...'}
-          </h1>
+          <div className="flex items-center gap-2">
+            {additionalData?.logo_url ? (
+              <img
+                src={additionalData.logo_url}
+                alt="Logo"
+                className="w-10 h-10 object-contain rounded-full"
+              />
+            ) : (
+              <h1 className="text-lg font-bold text-blue-600">
+                {store ? store.brand_name : 'Cargando...'}
+              </h1>
+            )}
+          </div>
 
           {/* Botón hamburguesa SOLO en mobile */}
           <button onClick={toggleMenu} className="md:hidden text-gray-700 focus:outline-none">

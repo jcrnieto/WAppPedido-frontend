@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { supabase } from '../../config/supabaseConfig';
+import { supabase } from '../../../config/supabaseConfig';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const AdditionalInformation = ({ storeId }) => {
-  console.log('storeId:', storeId);
+  // console.log('storeId:', storeId);
   const [logoFile, setLogoFile] = useState(null);
   const [logoUrl, setLogoUrl] = useState('');
+  const [additionalDescription, setAdditionalDescription] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [socialLinks, setSocialLinks] = useState(['', '', '']);
+  const [brandInformation, setBrandInformation] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [infoExists, setInfoExists] = useState(false);
-
 
   // 🔄 Traer datos actuales si existen
   useEffect(() => {
@@ -28,7 +30,9 @@ const AdditionalInformation = ({ storeId }) => {
         const rawWhatsapp = data.whatsapp?.match(/549(\d{10,11})$/)?.[1] || '';
         setWhatsapp(rawWhatsapp);
         setLogoUrl(data.logo_url || '');
+        setAdditionalDescription(data.additional_description || '');
         setSocialLinks(data.social_links || ['', '', '']);
+        setBrandInformation(data.brand_information || '');
         setInfoExists(true);
       }
     } catch (error) {
@@ -49,6 +53,10 @@ const AdditionalInformation = ({ storeId }) => {
     setLogoFile(e.target.files[0]);
   };
 
+  const handleBrandInformationChange = (e) => {
+    setBrandInformation(e.target.files[0]);
+  };
+
   const handleSocialLinkChange = (index, value) => {
     const updated = [...socialLinks];
     updated[index] = value;
@@ -60,6 +68,34 @@ const AdditionalInformation = ({ storeId }) => {
     setLoading(true);
 
     try {
+      
+      let brandInformationUrl = brandInformation;
+
+      if (brandInformation) {
+        const brandFileName = `${Date.now()}-${brandInformation.name}`;
+        const brandFilePath = `users/brandInfo/${brandFileName}`;
+
+        const { error: brandUploadError } = await supabase.storage
+          .from("wapedidos")
+          .upload(brandFilePath, brandInformation);
+
+        if (brandUploadError) {
+          console.error("❌ Error al subir imagen de marca:", brandUploadError.message);
+          return;
+        }
+
+        const { data: brandUrlData } = supabase.storage
+          .from("wapedidos")
+          .getPublicUrl(brandFilePath);
+
+        brandInformationUrl = brandUrlData?.publicUrl;
+        if (!brandInformationUrl) {
+          console.error("No se pudo obtener la URL pública.");
+          return;
+        }
+        setBrandInformation(brandInformationUrl);
+      }
+
       let imageUrl = logoUrl;
 
       if (logoFile) {
@@ -85,7 +121,7 @@ const AdditionalInformation = ({ storeId }) => {
           return;
         }
 
-        setLogoUrl(imageUrl); // Para mostrarla en pantalla si querés
+        setLogoUrl(imageUrl); 
       }
 
       if (!/^\d{10,11}$/.test(whatsapp)) {
@@ -99,8 +135,10 @@ const AdditionalInformation = ({ storeId }) => {
         whatsapp: `https://wa.me/549${whatsapp}`,
         logo_url: imageUrl,
         social_links: socialLinks.filter(link => link !== ''),
+        additional_description: additionalDescription,
+        brand_information_url: brandInformationUrl || '',
       };
-
+      
       if (infoExists) {      
         await axios.patch(`${baseUrl}/additionalInformation/updateAdditionalInformation/${storeId}`, payload);
       } else {      
@@ -134,6 +172,17 @@ const AdditionalInformation = ({ storeId }) => {
         <input type="file" accept="image/*" onChange={handleLogoChange} />
       </div>
 
+      <div>
+        <label className="block font-semibold mb-1">Información adicional (opcional)</label>
+        <textarea
+          value={additionalDescription}
+          onChange={(e) => setAdditionalDescription(e.target.value)}
+          placeholder="Ej: Envíos todos los días de 10 a 18hs"
+          rows={4}
+          className="border p-2 w-full rounded resize-none"
+        />
+      </div>
+
       {/* WhatsApp */}
       <div>
         <label className="block font-semibold mb-1">WhatsApp</label>
@@ -159,6 +208,17 @@ const AdditionalInformation = ({ storeId }) => {
             className="border p-2 w-full rounded mb-2"
           />
         ))}
+      </div>
+
+      {brandInformation && (
+        <div className="mb-2">
+          <img src={brandInformation} alt="Logo actual" className="w-24 h-24 object-contain" />
+        </div>
+      )}
+
+      <div>
+        <label className="block font-semibold mb-1">Foto Adicional con informacion de la marca</label>
+        <input type="file" accept="image/*" onChange={handleBrandInformationChange} />
       </div>
 
       <div className="text-right">

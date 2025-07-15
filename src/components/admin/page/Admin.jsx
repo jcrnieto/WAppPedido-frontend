@@ -1,12 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/clerk-react';
-import { supabase } from '../../config/supabaseConfig';
+import { supabase } from '../../../config/supabaseConfig';
 
-import DataPersonal from '../../components/admin/DataPersonal';
+import DataPersonal from '../components/DataPersonal';
 import PostProduct from './PostProduct';
-import BusinessHours from '../../components/admin/BusinessHours';
-import AdditionalInformation from '../../components/admin/AdditionalInformation';
+import BusinessHours from '../components/BusinessHours';
+import AdditionalInformation from '../components/AdditionalInformation';
+import LinkPage from '../components/LinkPage';
 
 const Admin = () => {
   const { slug } = useParams();
@@ -50,6 +51,10 @@ const Admin = () => {
         <DataPersonal store={store} />
         <BusinessHours storeId={store.id} />
         <AdditionalInformation storeId={store.user_id}/>
+        <LinkPage 
+          publicUrl={`http://localhost:5173${store.public_url}`} 
+          adminUrl={`http://localhost:5173${store.admin_url}`}
+        />
         <PostProduct />
       </main>
     </div>

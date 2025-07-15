@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../config/supabaseConfig';
+import { supabase } from '../../../config/supabaseConfig';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

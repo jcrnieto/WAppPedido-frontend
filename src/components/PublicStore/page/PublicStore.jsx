@@ -1,7 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { supabase } from '../../config/supabaseConfig'; 
-import NavbarUser from '../../components/PublicStore/NavbarUser';
+import { supabase } from '../../../config/supabaseConfig'; 
+import NavbarUser from '../components/NavbarUser';
+import AdditionalDescription from '../components/AdditionalDescription';
+import BrandInformation from '../components/BrandInformation';
 
 const PublicStore = () => {
   const { slug } = useParams();
@@ -18,7 +20,7 @@ const PublicStore = () => {
         .select('*')
         .eq('public_url', `/${slug}`)
         .maybeSingle(); 
-         console.log('📦 Datos de la tienda:', storeData);
+        //  console.log('📦 Datos de la tienda:', storeData);
         if (storeError) throw storeError;
         if (!storeData) throw new Error('Tienda no encontrada');
         
@@ -51,6 +53,8 @@ const PublicStore = () => {
     <div className="p-6 max-w-2xl mx-auto">
       {/* {console.log('additionalData:', additionalData)} */}
        <NavbarUser store={store} additionalData={additionalData}/>
+       <BrandInformation additionalData={additionalData} />
+       <AdditionalDescription additionalData={additionalData} />  
     </div>
   );
 };
