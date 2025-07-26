@@ -11,7 +11,7 @@ const AdditionalInformation = ({ storeId }) => {
   const [additionalDescription, setAdditionalDescription] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [socialLinks, setSocialLinks] = useState(['', '', '']);
-  const [brandInformation, setBrandInformation] = useState(false);
+  const [brandInformation, setBrandInformation] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [infoExists, setInfoExists] = useState(false);

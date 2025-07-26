@@ -4,13 +4,17 @@ import { supabase } from '../../../config/supabaseConfig';
 import NavbarUser from '../components/NavbarUser';
 import AdditionalDescription from '../components/AdditionalDescription';
 import BrandInformation from '../components/BrandInformation';
+import Categories from '../components/category/Categories';
 
 const PublicStore = () => {
   const { slug } = useParams();
+
+  const [loading, setLoading] = useState(true);
+
   const [store, setStore] = useState(null);
   const [additionalData, setAdditionalData] = useState(null);
-  const [loading, setLoading] = useState(true);
- 
+  const [categories, setCategories] = useState(null);
+
   useEffect(() => {
   const fetchStore = async () => {
     try {
@@ -21,10 +25,8 @@ const PublicStore = () => {
         .eq('public_url', `/${slug}`)
         .maybeSingle(); 
         //  console.log('📦 Datos de la tienda:', storeData);
-        if (storeError) throw storeError;
-        if (!storeData) throw new Error('Tienda no encontrada');
-        
-      
+      if (storeError) throw storeError;
+      if (!storeData) throw new Error('Tienda no encontrada');
       setStore(storeData);
        
       const { data: additionalData, error: additionalError } = await supabase
@@ -35,6 +37,16 @@ const PublicStore = () => {
       if (additionalError) throw additionalError;
       // console.log('📦 Datos adicionales:', additionalData);
       setAdditionalData(additionalData);
+
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('categories_wapppedidos')
+        .select('*')
+        .eq('user_id', storeData.user_id);
+
+      if (categoriesError) throw categoriesError;
+      //  console.log('📦 Categorías:', categoriesData);
+      setCategories(categoriesData);
+
     } catch (error) {
       console.error('❌ Error cargando datos públicos:', error);
     } finally {
@@ -54,7 +66,8 @@ const PublicStore = () => {
       {/* {console.log('additionalData:', additionalData)} */}
        <NavbarUser store={store} additionalData={additionalData}/>
        <BrandInformation additionalData={additionalData} />
-       <AdditionalDescription additionalData={additionalData} />  
+       <AdditionalDescription additionalData={additionalData} /> 
+       <Categories categories={categories}/> 
     </div>
   );
 };

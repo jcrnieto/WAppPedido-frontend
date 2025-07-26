@@ -8,6 +8,8 @@ import PostProduct from './PostProduct';
 import BusinessHours from '../components/BusinessHours';
 import AdditionalInformation from '../components/AdditionalInformation';
 import LinkPage from '../components/LinkPage';
+// import AddCategories from '../components/categories/AddCategoriesForm';
+import CategoryManager from '../components/categories/CategoryManager';
 
 const Admin = () => {
   const { slug } = useParams();
@@ -52,10 +54,11 @@ const Admin = () => {
         <BusinessHours storeId={store.id} />
         <AdditionalInformation storeId={store.user_id}/>
         <LinkPage 
-          publicUrl={`http://localhost:5173${store.public_url}`} 
-          adminUrl={`http://localhost:5173${store.admin_url}`}
+          publicUrl={`https://w-app-pedido-frontend.vercel.app/${store.public_url}`} 
+          adminUrl={`https://w-app-pedido-frontend.vercel.app/${store.admin_url}`}
         />
         <PostProduct />
+        <CategoryManager storeId={store.user_id} />
       </main>
     </div>
   );
