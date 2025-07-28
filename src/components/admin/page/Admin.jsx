@@ -51,7 +51,7 @@ const Admin = () => {
       {/* Main content */}
       <main className="p-6 max-w-4xl mx-auto space-y-8">
         <DataPersonal store={store} />
-        <BusinessHours storeId={store.id} />
+        <BusinessHours storeId={store.user_id} />
         <AdditionalInformation storeId={store.user_id}/>
         <LinkPage 
           publicUrl={`https://w-app-pedido-frontend.vercel.app/${store.public_url}`} 

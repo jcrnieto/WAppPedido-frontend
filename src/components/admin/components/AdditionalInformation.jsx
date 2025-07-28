@@ -13,6 +13,9 @@ const AdditionalInformation = ({ storeId }) => {
   const [socialLinks, setSocialLinks] = useState(['', '', '']);
   const [brandInformation, setBrandInformation] = useState('');
 
+  const [logoPreview, setLogoPreview] = useState('');
+  const [brandPreview, setBrandPreview] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [infoExists, setInfoExists] = useState(false);
 
@@ -31,7 +34,10 @@ const AdditionalInformation = ({ storeId }) => {
         setWhatsapp(rawWhatsapp);
         setLogoUrl(data.logo_url || '');
         setAdditionalDescription(data.additional_description || '');
-        setSocialLinks(data.social_links || ['', '', '']);
+        // setSocialLinks(data.social_links || ['', '', '']);
+        setSocialLinks(data.social_links && data.social_links.length > 0 
+        ? data.social_links 
+        : ['', '', '']);
         setBrandInformation(data.brand_information || '');
         setInfoExists(true);
       }
@@ -50,11 +56,21 @@ const AdditionalInformation = ({ storeId }) => {
 
 
   const handleLogoChange = (e) => {
-    setLogoFile(e.target.files[0]);
+    // setLogoFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setLogoFile(file);
+      setLogoPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleBrandInformationChange = (e) => {
-    setBrandInformation(e.target.files[0]);
+    // setBrandInformation(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setBrandInformation(file);
+      setBrandPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSocialLinkChange = (index, value) => {
@@ -159,19 +175,42 @@ const AdditionalInformation = ({ storeId }) => {
     <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
       <h2 className="text-xl font-semibold text-blue-600">📄 Información Adicional</h2>
 
-      {/* Logo actual */}
-      {logoUrl && (
+      {/* Logo actual o preview */}
+      {logoPreview ? (
         <div className="mb-2">
-          <img src={logoUrl} alt="Logo actual" className="w-24 h-24 object-contain" />
+          <img src={logoPreview} alt="Preview logo" className="w-24 h-24 object-contain" />
         </div>
+      ) : (
+        logoUrl && (
+          <div className="mb-2">
+            <img src={logoUrl} alt="Logo actual" className="w-24 h-24 object-contain" />
+          </div>
+        )
       )}
 
       {/* Cargar nuevo logo */}
       <div>
-        <label className="block font-semibold mb-1">Logo del negocio</label>
-        <input type="file" accept="image/*" onChange={handleLogoChange} />
-      </div>
+          <label className="block font-semibold mb-1">Logo del negocio</label>
+          {/* Ocultamos el input real */}
+          <input 
+            type="file" 
+            accept="image/*" 
+            id="logoInput"
+            onChange={handleLogoChange} 
+            className="hidden"
+          />
 
+          {/* Creamos un botón personalizado */}
+          <label 
+            htmlFor="logoInput" 
+            className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block"
+          >
+            Seleccionar logo
+          </label>
+          {/* Mostrar nombre del archivo si se cargó */}
+          {logoFile && <p className="mt-2 text-sm text-gray-500">{logoFile.name}</p>}
+      </div>
+     
       <div>
         <label className="block font-semibold mb-1">Información adicional (opcional)</label>
         <textarea
@@ -210,15 +249,40 @@ const AdditionalInformation = ({ storeId }) => {
         ))}
       </div>
 
-      {brandInformation && (
+      {/* Imagen adicional */}
+      {brandPreview ? (
         <div className="mb-2">
-          <img src={brandInformation} alt="Logo actual" className="w-24 h-24 object-contain" />
+          <img src={brandPreview} alt="Preview info marca" className="w-24 h-24 object-contain" />
         </div>
+      ) : (
+        brandInformation && typeof brandInformation === 'string' && (
+          <div className="mb-2">
+            <img src={brandInformation} alt="Info marca actual" className="w-24 h-24 object-contain" />
+          </div>
+        )
       )}
 
       <div>
         <label className="block font-semibold mb-1">Foto Adicional con informacion de la marca</label>
-        <input type="file" accept="image/*" onChange={handleBrandInformationChange} />
+        <input 
+            type="file" 
+            accept="image/*" 
+            id="brandInput"
+            onChange={handleBrandInformationChange} 
+            className="hidden"
+          />
+
+          {/* Creamos un botón personalizado */}
+          <label 
+            htmlFor="brandInput" 
+            className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block"
+          >
+            Seleccionar imagen
+          </label>
+
+          {brandInformation && brandInformation.name && (
+            <p className="mt-2 text-sm text-gray-500">{brandInformation.name}</p>
+          )}
       </div>
 
       <div className="text-right">

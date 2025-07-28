@@ -14,6 +14,7 @@ const dayNames = {
 };
 
 const BusinessHours = ({ userId }) => {
+  //console.log('🔍 user_id desde el componente businesshours:', userId);
   const [isOpen, setIsOpen] = useState(false);
   const [hours, setHours] = useState([]);
 
@@ -23,7 +24,7 @@ const BusinessHours = ({ userId }) => {
         .from('business_hours_wapppedidos')
         .select('*')
         .eq('user_id', userId);
-
+      //console.log('📦 Horarios obtenidos:', data);
       if (!error) {
         const ordered = dayOrder.map(day =>
           data.find(h => h.day === day)

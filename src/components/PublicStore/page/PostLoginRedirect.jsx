@@ -13,7 +13,8 @@ const PostLoginRedirect = () => {
   useEffect(() => {
   const syncUser = async () => {
     if (!user || checked) return;
-
+    setChecked(true);
+    
     const email = user?.emailAddresses?.[0]?.emailAddress;
     if (!email) return;
 
@@ -44,7 +45,7 @@ const PostLoginRedirect = () => {
       console.log('profileCompleted:', userData.profile_completed);
       console.log('personalData:', userData.personalData?.[0]);
 
-      const personalDataEntry = userData.personalData?.[0];
+      const personalDataEntry = userData.personalData;
       
       // 3. Redireccionar según estado del perfil
       if (userData.profile_completed && personalDataEntry?.admin_url) {
@@ -53,7 +54,7 @@ const PostLoginRedirect = () => {
         navigate('/completar-perfil');
       }
 
-      setChecked(true);
+      
     } catch (error) {
       console.error('❌ Error registrando/verificando usuario:', error);
     }

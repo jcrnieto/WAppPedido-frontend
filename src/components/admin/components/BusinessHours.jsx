@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -11,6 +11,16 @@ const dayTranslation = {
   'Viernes': 'Friday',
   'Sábado': 'Saturday',
   'Domingo': 'Sunday',
+};
+
+const reverseDayTranslation = {
+  'Monday': 'Lunes',
+  'Tuesday': 'Martes',
+  'Wednesday': 'Miércoles',
+  'Thursday': 'Jueves',
+  'Friday': 'Viernes',
+  'Saturday': 'Sábado',
+  'Sunday': 'Domingo',
 };
 
 const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -32,6 +42,50 @@ const initialSchedule = daysOfWeek.reduce((acc, day) => {
 
 const BusinessHours = ({ storeId }) => {
   const [schedule, setSchedule] = useState(initialSchedule);
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const { data } = await axios.get(`${baseUrl}/businessHours/getBusinessHoursByUser/${storeId}`);
+        console.log('📦 Horarios obtenidos:', data);
+        const businessHours = data.businessHours || [];
+        const newSchedule = { ...initialSchedule };
+
+        businessHours.forEach((item) => {
+          const dayEs = reverseDayTranslation[item.day] || item.day;
+          if (item.from_2) {
+            newSchedule[dayEs] = {
+              open: true,
+              useSplit: true,
+              morningStart: item.from_1,
+              morningEnd: item.to_1,
+              afternoonStart: item.from_2,
+              afternoonEnd: item.to_2,
+              singleStart: '',
+              singleEnd: '',
+            };
+          } else {
+            newSchedule[dayEs] = {
+              open: true,
+              useSplit: false,
+              singleStart: item.from_1,
+              singleEnd: item.to_1,
+              morningStart: '',
+              morningEnd: '',
+              afternoonStart: '',
+              afternoonEnd: '',
+            };
+          }
+        });
+
+        setSchedule(newSchedule);
+      } catch (err) {
+        console.error('❌ Error al cargar horarios:', err);
+      }
+    };
+
+    if (storeId) fetchSchedule();
+  }, [storeId]);
 
   const toggleDayOpen = (day) => {
     setSchedule((prev) => ({
@@ -98,7 +152,7 @@ const BusinessHours = ({ storeId }) => {
       to_2: config.afternoonEnd || null,
     }];
   });
-};
+  };
 
 
   const handleSave = async () => {
@@ -111,6 +165,7 @@ const BusinessHours = ({ storeId }) => {
       });
 
       console.log('✅ Horarios guardados:', response.data);
+      alert('Horarios guardados correctamente ✅');
     } catch (err) {
       console.error('❌ Error al guardar horarios:', err.response?.data || err.message);
     }

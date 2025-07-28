@@ -1,10 +1,11 @@
 const BrandInformation = ({ additionalData }) => {
+  console.log('additionalData', additionalData);
   const brandUrl = additionalData?.brand_information_url;
 
   if (!brandUrl) return null; // ✅ No mostrar nada si no hay logo
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white mt-14">
         <img
           src={brandUrl}
           alt="Logo del negocio"

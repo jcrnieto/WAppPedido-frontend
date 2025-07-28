@@ -12,7 +12,7 @@ const CategoryManager = ({ storeId }) => {
     try {
       const { data } = await axios.get(`${baseUrl}/categories/getAllCategoriesByUser/${storeId}`);
       setCategories(data.categories);
-      console.log('📦 Categorías obtenidas:', data);
+      //console.log('📦 Categorías obtenidas:', data);
     } catch (error) {
       console.error('❌ Error al traer categorías:', error.message);
     }

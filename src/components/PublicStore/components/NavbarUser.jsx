@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, MapPin } from 'lucide-react';
-import { FaInstagram, FaFacebookF, FaTiktok, FaWhatsapp } from 'react-icons/fa'; 
+import { FaInstagram, FaFacebookF, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 
 import BusinessHours from './BusinessHours';
 import MapModal from './MapModal';
 
-const NavbarUser = ({store, additionalData}) => {
-  // console.log('additionadata', additionalData);
+const NavbarUser = ({ store, additionalData }) => {
+  //console.log('store', store);
   const [isOpen, setIsOpen] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -16,11 +16,11 @@ const NavbarUser = ({store, additionalData}) => {
   };
 
   useEffect(() => {
-      const fetchData = async () => {
+    const fetchData = async () => {
       try {
-         if (!store || !store.id) return;
-        
-         if (!additionalData || !additionalData.user_id) return;
+        if (!store || !store.id) return;
+
+        if (!additionalData || !additionalData.user_id) return;
 
       } catch (error) {
         console.error('Error al cargar datos:', error);
@@ -29,7 +29,7 @@ const NavbarUser = ({store, additionalData}) => {
       }
     };
 
-  
+
     fetchData();
   }, []);
 
@@ -58,8 +58,8 @@ const NavbarUser = ({store, additionalData}) => {
 
           {/* Menú horizontal SOLO en desktop */}
           <div className="hidden md:flex items-center gap-8 text-sm">
-            <BusinessHours userId={store?.id} />
-            
+            <BusinessHours userId={store?.user_id} />
+
             {/* Ubicación con modal */}
             <button
               onClick={() => setIsMapOpen(true)}
@@ -112,7 +112,7 @@ const NavbarUser = ({store, additionalData}) => {
         {/* Menú desplegable SOLO en mobile */}
         {isOpen && (
           <div className="bg-gray-100 p-4 border-t text-sm space-y-4 md:hidden">
-            <BusinessHours userId={store?.id} />
+            <BusinessHours userId={store?.user_id} />
 
             {/* Botón Ubicación */}
             <button
@@ -144,31 +144,59 @@ const NavbarUser = ({store, additionalData}) => {
             </div>
 
             {/* Redes sociales en mobile */}
-<div className="md:hidden flex flex-col gap-1 text-blue-600">
-  <span className="font-semibold text-gray-800">Redes sociales</span>
-  <div className="flex gap-3 mt-1">
-    {additionalData?.social_links?.map((link, i) => {
-      const getIcon = () => {
-        if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" />;
-        if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" />;
-        if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
-        return <span className="text-xs">🔗</span>;
-      };
+            {/* <div className="md:hidden flex flex-col gap-1 text-blue-600">
+              <span className="font-semibold text-gray-800">Redes sociales</span>
+              <div className="flex gap-3 mt-1">
+                {additionalData?.social_links?.map((link, i) => {
+                  const getIcon = () => {
+                    if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" />;
+                    if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" />;
+                    if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
+                    return <span className="text-xs">🔗</span>;
+                  };
 
-      return (
-        <a
-          key={i}
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800"
-        >
-          {getIcon()}
-        </a>
-      );
-    })}
+                  return (
+                    <a
+                      key={i}
+                      href={link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      {getIcon()}
+                    </a>
+                  );
+                })}
+              </div>
+            </div> */}
+            {additionalData?.social_links?.length > 0 &&
+ additionalData.social_links.some(link => link.trim() !== '') && (
+  <div className="md:hidden flex flex-col gap-1 text-blue-600">
+    <span className="font-semibold text-gray-800">Redes sociales</span>
+    <div className="flex gap-3 mt-1">
+      {additionalData.social_links.map((link, i) => {
+        const getIcon = () => {
+          if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" />;
+          if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" />;
+          if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
+          return <span className="text-xs">🔗</span>;
+        };
+
+        return (
+          <a
+            key={i}
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800"
+          >
+            {getIcon()}
+          </a>
+        );
+      })}
+    </div>
   </div>
-</div>
+)}
 
           </div>
         )}
@@ -184,7 +212,7 @@ const NavbarUser = ({store, additionalData}) => {
       />
     </>
 
-    
+
   );
 };
 
