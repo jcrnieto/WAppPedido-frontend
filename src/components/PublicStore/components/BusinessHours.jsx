@@ -41,7 +41,7 @@ const BusinessHours = ({ userId }) => {
   return (
     <>
       <button
-        className="text-blue-600 underline"
+        className="text-gray-800 no-underline"
         onClick={() => setIsOpen(true)}
       >
         Horarios de atención

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//console.log('🔗 URL base de la API:', baseUrl);
 
 const dayTranslation = {
   'Lunes': 'Monday',
@@ -47,7 +48,7 @@ const BusinessHours = ({ storeId }) => {
     const fetchSchedule = async () => {
       try {
         const { data } = await axios.get(`${baseUrl}/businessHours/getBusinessHoursByUser/${storeId}`);
-        console.log('📦 Horarios obtenidos:', data);
+        //console.log('📦 Horarios obtenidos:', data);
         const businessHours = data.businessHours || [];
         const newSchedule = { ...initialSchedule };
 

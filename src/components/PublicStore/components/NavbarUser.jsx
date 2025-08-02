@@ -42,10 +42,10 @@ const NavbarUser = ({ store, additionalData }) => {
               <img
                 src={additionalData.logo_url}
                 alt="Logo"
-                className="w-10 h-10 object-contain rounded-full"
+                className="w-16 h-16 md:w-20 md:h-20 object-contain"
               />
             ) : (
-              <h1 className="text-lg font-bold text-blue-600">
+              <h1 className="text-lg font-bold text-gray-800">
                 {store ? store.brand_name : 'Cargando...'}
               </h1>
             )}
@@ -63,7 +63,7 @@ const NavbarUser = ({ store, additionalData }) => {
             {/* Ubicación con modal */}
             <button
               onClick={() => setIsMapOpen(true)}
-              className="flex items-center gap-1 text-blue-600 font-semibold"
+              className="flex items-center gap-1 text-gray-800 font-semibold"
             >
               <MapPin className="w-5 h-5" />
               <span>Ubicación</span>
@@ -87,9 +87,9 @@ const NavbarUser = ({ store, additionalData }) => {
               {/* {console.log('informacion adicional',additionalInfo?.social_links)} */}
               {additionalData?.social_links?.map((link, i) => {
                 const getIcon = () => {
-                  if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" />;
-                  if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" />;
-                  if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
+                  if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }}/>;
+                  if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }}/>;
+                  if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }}/>;
                   return <span className="text-xs">🔗</span>; // ícono genérico si no se reconoce
                 };
 
@@ -143,60 +143,35 @@ const NavbarUser = ({ store, additionalData }) => {
               )}
             </div>
 
-            {/* Redes sociales en mobile */}
-            {/* <div className="md:hidden flex flex-col gap-1 text-blue-600">
-              <span className="font-semibold text-gray-800">Redes sociales</span>
-              <div className="flex gap-3 mt-1">
-                {additionalData?.social_links?.map((link, i) => {
-                  const getIcon = () => {
-                    if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" />;
-                    if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" />;
-                    if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
-                    return <span className="text-xs">🔗</span>;
-                  };
-
-                  return (
-                    <a
-                      key={i}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      {getIcon()}
-                    </a>
-                  );
-                })}
-              </div>
-            </div> */}
+            {/* Redes sociales mobile*/}
             {additionalData?.social_links?.length > 0 &&
- additionalData.social_links.some(link => link.trim() !== '') && (
-  <div className="md:hidden flex flex-col gap-1 text-blue-600">
-    <span className="font-semibold text-gray-800">Redes sociales</span>
-    <div className="flex gap-3 mt-1">
-      {additionalData.social_links.map((link, i) => {
-        const getIcon = () => {
-          if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" />;
-          if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" />;
-          if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
-          return <span className="text-xs">🔗</span>;
-        };
+              additionalData.social_links.some(link => link.trim() !== '') && (
+                <div className="md:hidden flex flex-col gap-1 text-blue-600">
+                  <span className="font-semibold text-gray-800">Redes sociales</span>
+                  <div className="flex gap-3 mt-1">
+                    {additionalData.social_links.map((link, i) => {
+                      const getIcon = () => {
+                        if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }}/>;
+                        if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }}/>;
+                        if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }}/>;
+                        return <span className="text-xs">🔗</span>;
+                      };
 
-        return (
-          <a
-            key={i}
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800"
-          >
-            {getIcon()}
-          </a>
-        );
-      })}
-    </div>
-  </div>
-)}
+                      return (
+                        <a
+                          key={i}
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          {getIcon()}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
           </div>
         )}

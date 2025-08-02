@@ -6,20 +6,23 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const AdditionalInformation = ({ storeId }) => {
   // console.log('storeId:', storeId);
-  const [logoFile, setLogoFile] = useState(null);
-  const [logoUrl, setLogoUrl] = useState('');
   const [additionalDescription, setAdditionalDescription] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [socialLinks, setSocialLinks] = useState(['', '', '']);
   const [brandInformation, setBrandInformation] = useState('');
 
   const [logoPreview, setLogoPreview] = useState('');
-  const [brandPreview, setBrandPreview] = useState('');
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoUrl, setLogoUrl] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [infoExists, setInfoExists] = useState(false);
 
-  // 🔄 Traer datos actuales si existen
+  const [brandPreview, setBrandPreview] = useState('');
+  const [brandFile, setBrandFile] = useState(null);
+  const [brandUrl, setBrandUrl] = useState('');
+  
+ // 🔄 Traer datos actuales si existen
   useEffect(() => {
   const fetchData = async () => {
     if (!storeId) return;
@@ -34,11 +37,10 @@ const AdditionalInformation = ({ storeId }) => {
         setWhatsapp(rawWhatsapp);
         setLogoUrl(data.logo_url || '');
         setAdditionalDescription(data.additional_description || '');
-        // setSocialLinks(data.social_links || ['', '', '']);
         setSocialLinks(data.social_links && data.social_links.length > 0 
         ? data.social_links 
         : ['', '', '']);
-        setBrandInformation(data.brand_information || '');
+        setBrandUrl(data.brand_information_url || '');
         setInfoExists(true);
       }
     } catch (error) {
@@ -68,7 +70,7 @@ const AdditionalInformation = ({ storeId }) => {
     // setBrandInformation(e.target.files[0]);
     const file = e.target.files[0];
     if (file) {
-      setBrandInformation(file);
+      setBrandFile(file);
       setBrandPreview(URL.createObjectURL(file));
     }
   };
@@ -85,15 +87,15 @@ const AdditionalInformation = ({ storeId }) => {
 
     try {
       
-      let brandInformationUrl = brandInformation;
+      let brandInformationUrl = brandUrl;
 
-      if (brandInformation) {
-        const brandFileName = `${Date.now()}-${brandInformation.name}`;
+      if (brandFile) {
+        const brandFileName = `${Date.now()}-${brandFile.name}`;
         const brandFilePath = `users/brandInfo/${brandFileName}`;
 
         const { error: brandUploadError } = await supabase.storage
           .from("wapedidos")
-          .upload(brandFilePath, brandInformation);
+          .upload(brandFilePath, brandFile);
 
         if (brandUploadError) {
           console.error("❌ Error al subir imagen de marca:", brandUploadError.message);
@@ -171,6 +173,26 @@ const AdditionalInformation = ({ storeId }) => {
     }
   };
 
+  const handleRemoveLogo = async () => {
+    try {
+      await axios.delete(`${baseUrl}/additionalInformation/removeLogo/${storeId}`);
+      setLogoUrl('');
+      alert('Logo eliminado');
+    } catch (error) {
+      console.error('Error eliminando logo', error);
+    }
+  };
+
+  const handleRemoveBrand = async () => {
+      try {
+        await axios.delete(`${baseUrl}/additionalInformation/removeBrand/${storeId}`);
+        setBrandUrl('');
+        alert('Imagen eliminada');
+      } catch (error) {
+        console.error('Error eliminando imagen de marca', error);
+      }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
       <h2 className="text-xl font-semibold text-blue-600">📄 Información Adicional</h2>
@@ -179,11 +201,25 @@ const AdditionalInformation = ({ storeId }) => {
       {logoPreview ? (
         <div className="mb-2">
           <img src={logoPreview} alt="Preview logo" className="w-24 h-24 object-contain" />
+          <button 
+            type="button" 
+            onClick={() => setLogoPreview('')}
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+          >
+            Quitar
+          </button>
         </div>
       ) : (
         logoUrl && (
           <div className="mb-2">
             <img src={logoUrl} alt="Logo actual" className="w-24 h-24 object-contain" />
+            <button 
+              type="button"
+              onClick={handleRemoveLogo}
+              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            >
+              Eliminar logo
+            </button>
           </div>
         )
       )}
@@ -253,11 +289,25 @@ const AdditionalInformation = ({ storeId }) => {
       {brandPreview ? (
         <div className="mb-2">
           <img src={brandPreview} alt="Preview info marca" className="w-24 h-24 object-contain" />
+          <button 
+            type="button" 
+            onClick={() => setBrandPreview('')}
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+          >
+            Quitar
+          </button>
         </div>
       ) : (
-        brandInformation && typeof brandInformation === 'string' && (
+        brandUrl && (
           <div className="mb-2">
-            <img src={brandInformation} alt="Info marca actual" className="w-24 h-24 object-contain" />
+            <img src={brandUrl} alt="Info marca actual" className="w-24 h-24 object-contain" />
+            <button 
+              type="button"
+              onClick={handleRemoveBrand}
+              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            >
+              Eliminar imagen
+            </button>
           </div>
         )
       )}
@@ -280,8 +330,8 @@ const AdditionalInformation = ({ storeId }) => {
             Seleccionar imagen
           </label>
 
-          {brandInformation && brandInformation.name && (
-            <p className="mt-2 text-sm text-gray-500">{brandInformation.name}</p>
+          {brandFile && (
+            <p className="mt-2 text-sm text-gray-500">{brandFile.name}</p>
           )}
       </div>
 
