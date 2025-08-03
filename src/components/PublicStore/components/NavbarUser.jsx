@@ -42,7 +42,7 @@ const NavbarUser = ({ store, additionalData }) => {
               <img
                 src={additionalData.logo_url}
                 alt="Logo"
-                className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                className="w-28 h-28 md:w-28 md:h-28 object-contain"
               />
             ) : (
               <h1 className="text-lg font-bold text-gray-800">
