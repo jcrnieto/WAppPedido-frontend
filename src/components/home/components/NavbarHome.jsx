@@ -6,15 +6,15 @@ const NavbarHome = () => {
 
   const navItems = [
     { href: '#home', label: 'Inicio' },
-    { href: '#about', label: 'Sobre mí' },
-    { href: '#projects', label: 'Proyectos' },
+    { href: '#about', label: 'Sobre Nosotros' },
+    { href: '#projects', label: 'Contratar Servicio' },
     { href: '#contact', label: 'Contacto' },
   ];
 
   return (
     <nav className="bg-gray-800 text-white px-6 py-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold">Admin Panel</h1>
+        <h1 className="text-xl font-bold">WA PEDIDOS</h1>
 
         {/* Desktop nav */}
         <ul className="hidden md:flex gap-6">
