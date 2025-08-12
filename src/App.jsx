@@ -11,6 +11,7 @@ import FormDataPersonal from './components/admin/page/FormDataPersonal';
 import Admin from './components/admin/page/Admin';
 import Register from './components/home/page/Register';
 import PublicStore from './components/PublicStore/page/PublicStore';
+import CategoryProducts from './components/PublicStore/page/AllProductsByCategory';
 
 function App() {
 
@@ -49,6 +50,8 @@ function App() {
             path="/:slug"
             element={<PublicStore />} 
           />
+
+          <Route path="/store/:slug/:userId/category/:categoryId" element={<CategoryProducts />} />
 
         </Routes>
       </Router>

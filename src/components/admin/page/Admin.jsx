@@ -4,12 +4,12 @@ import { UserButton } from '@clerk/clerk-react';
 import { supabase } from '../../../config/supabaseConfig';
 
 import DataPersonal from '../components/DataPersonal';
-import PostProduct from './PostProduct';
+// import PostProduct from './PostProduct';
 import BusinessHours from '../components/BusinessHours';
 import AdditionalInformation from '../components/AdditionalInformation';
 import LinkPage from '../components/LinkPage';
-// import AddCategories from '../components/categories/AddCategoriesForm';
 import CategoryManager from '../components/categories/CategoryManager';
+import ProductManager from '../components/products/ProductManager';
 
 const Admin = () => {
   const { slug } = useParams();
@@ -57,8 +57,9 @@ const Admin = () => {
           publicUrl={`https://w-app-pedido-frontend.vercel.app/${store.public_url}`} 
           adminUrl={`https://w-app-pedido-frontend.vercel.app/${store.admin_url}`}
         />
-        <PostProduct />
+        {/* <PostProduct /> */}
         <CategoryManager storeId={store.user_id} />
+        <ProductManager storeId={store.user_id} />
       </main>
     </div>
   );

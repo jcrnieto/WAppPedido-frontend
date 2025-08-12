@@ -40,7 +40,7 @@ const PublicStore = () => {
 
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories_wapppedidos')
-        .select('*')
+        .select(`*, products_wapppedidos (*)`)
         .eq('user_id', storeData.user_id);
 
       if (categoriesError) throw categoriesError;

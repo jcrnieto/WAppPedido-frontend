@@ -1,11 +1,16 @@
+import { useNavigate, useParams } from 'react-router-dom';
+
 const Categories = ({ categories }) => {
+  const navigate = useNavigate();
+  const { slug } = useParams(); 
+
   return (
-    
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       {categories.map((cat) => (
         <div
           key={cat.id}
-          className="bg-white border border-gray-200 rounded-xl shadow hover:shadow-lg transition-shadow duration-300"
+          className="bg-white border border-gray-200 rounded-xl shadow hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+          onClick={() => navigate(`/store/${slug}/${cat.user_id}/category/${cat.id}`)}
         >
           <div className="w-full aspect-square overflow-hidden rounded-t-xl">
             <img
@@ -24,3 +29,5 @@ const Categories = ({ categories }) => {
 };
 
 export default Categories;
+
+

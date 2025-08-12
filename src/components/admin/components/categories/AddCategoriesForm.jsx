@@ -50,15 +50,8 @@ const AddCategoryForm = ({ storeId, category, onSuccess, onCancelEdit }) => {
 
       if (category?.id) {
         await axios.patch(`${baseUrl}/categories/updateCategory/${category.id}`, payload);
-        // setName("");
-        // setImageFile(null);
-        // setImageUrl("");
-        // setCategoryId(null)
       } else {
         await axios.post(`${baseUrl}/categories/createCategory`, payload);
-        // setName("");
-        // setImageFile(null);
-        // setImageUrl("");
       }
 
       alert('✅ Categoría guardada');
@@ -95,11 +88,6 @@ const AddCategoryForm = ({ storeId, category, onSuccess, onCancelEdit }) => {
       <h3 className="text-lg font-bold text-blue-600">
         {category ? '✏️ Editar Categoría' : '➕ Nueva Categoría'}
       </h3>  
-
-      {/* {imageUrl && (
-        <img src={imageUrl} alt="Preview" className="w-24 h-24 object-cover rounded" />
-      )} */}
-
       {/* Vista previa de imagen */}
       {imagePreview ? (
         <div className="mb-2">
@@ -126,7 +114,6 @@ const AddCategoryForm = ({ storeId, category, onSuccess, onCancelEdit }) => {
 
       <div>
         <label className="block font-semibold mb-1">Imagen</label>
-        {/* <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} /> */}
         <input 
           type="file" 
           accept="image/*" 
