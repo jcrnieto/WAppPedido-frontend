@@ -43,15 +43,68 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
     }
   }, [product]);
 
+  // libera object URLs anteriores cuando cambian (evita leak)
+  useEffect(() => {
+    return () => {
+      imagesPreview.forEach(url => {
+        try { URL.revokeObjectURL(url); } catch (e) {}
+      });
+    };
+  }, [imagesPreview]);
+
   const handleImagesChange = (e) => {
-    const files = Array.from(e.target.files);
-    setImages(files);
-    setImagesPreview(files.map(f => URL.createObjectURL(f)));
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const alreadySaved = savedImages.length;   // urls que ya están guardadas
+    const alreadyNew = images.length;          // files que ya seleccionaste antes (en esta sesión)
+    const available = 5 - alreadySaved - alreadyNew;
+
+    if (available <= 0) {
+      alert("Ya tenés 5 imágenes (guardadas + seleccionadas). Elimína algunas si querés subir otras.");
+      e.target.value = ''; // limpia input para permitir re-selección del mismo archivo después
+      return;
+    }
+
+    // Si intentan añadir más de lo permitido, recortamos y avisamos
+    const toAdd = files.slice(0, available);
+    if (files.length > toAdd.length) {
+      alert(`Solo se agregaron ${toAdd.length} archivos para respetar el límite de 5 imágenes.`);
+    }
+
+    // crear previews y agregarlas al estado (concatenando)
+    const newPreviews = toAdd.map(f => URL.createObjectURL(f));
+    setImages(prev => [...prev, ...toAdd]);
+    setImagesPreview(prev => [...prev, ...newPreviews]);
+
+    // limpiar el input para permitir seleccionar el mismo archivo más tarde
+    e.target.value = '';
+  };
+
+  const removeNewImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+    setImagesPreview(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeSavedImage = (index) => {
+    setSavedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    if (savedImages.length + images.length === 0) {
+    alert("Debes subir al menos una imagen.");
+    setLoading(false);
+    return;
+    }
+
+    if (savedImages.length + images.length > 5) {
+      alert("No puedes subir más de 5 imágenes.");
+      setLoading(false);
+      return;
+    }
 
     try {
       let finalImages = [...savedImages];
@@ -81,6 +134,15 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
       } else {
         await axios.post(`${baseUrl}/products/createProduct`, payload);
       }
+
+      // ✅ Limpiar el formulario después de guardar
+      setName('');
+      setDescription('');
+      setPrice('');
+      setCategoryId('');
+      setSavedImages([]);
+      setImages([]);
+      setImagesPreview([]);
 
       alert('✅ Producto guardado');
       if (onSuccess) onSuccess();
@@ -150,7 +212,16 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
       {imagesPreview.length > 0 && (
         <div className="flex gap-2 flex-wrap">
           {imagesPreview.map((img, idx) => (
-            <img key={idx} src={img} alt="preview" className="w-24 h-24 object-cover rounded" />
+            <div key={idx} className="relative">
+              <img key={idx} src={img} alt="preview" className="w-24 h-24 object-cover rounded" />
+              <button
+                type="button"
+                onClick={() => removeNewImage(idx)}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+              >
+                ×
+              </button>
+            </div>
           ))}
         </div>
       )}
@@ -159,7 +230,16 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
       {savedImages.length > 0 && imagesPreview.length === 0 && (
         <div className="flex gap-2 flex-wrap">
           {savedImages.map((url, idx) => (
-            <img key={idx} src={url} alt="saved" className="w-24 h-24 object-cover rounded" />
+             <div key={idx} className="relative">
+                <img key={idx} src={url} alt="saved" className="w-24 h-24 object-cover rounded" />
+                <button
+                  type="button"
+                  onClick={() => removeSavedImage(idx)}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                >
+                  ×
+                </button>
+            </div>
           ))}
         </div>
       )}
@@ -180,6 +260,9 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
         >
           Seleccionar imágenes
         </label>
+          <p className="text-sm text-gray-500">
+            {savedImages.length + images.length} / 5 imágenes
+          </p>
       </div>
 
       <div className="text-right">

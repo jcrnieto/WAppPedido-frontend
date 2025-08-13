@@ -12,6 +12,7 @@ import Admin from './components/admin/page/Admin';
 import Register from './components/home/page/Register';
 import PublicStore from './components/PublicStore/page/PublicStore';
 import CategoryProducts from './components/PublicStore/page/AllProductsByCategory';
+import DetailProduct from './components/PublicStore/page/DetailProduct';
 
 function App() {
 
@@ -52,6 +53,8 @@ function App() {
           />
 
           <Route path="/store/:slug/:userId/category/:categoryId" element={<CategoryProducts />} />
+
+          <Route path="/store/:slug/:userId/product/:productId" element={<DetailProduct />}/>
 
         </Routes>
       </Router>

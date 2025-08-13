@@ -2,3 +2,19 @@
 
 @import "preline/variants.css";
 @source "../node_modules/preline/dist/*.js";
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: black !important; /* flechas negras */
+}
+
+/* Cambiar color de los puntos (paginación) */
+.swiper-pagination-bullet {
+  background: black !important; /* puntos grises/negros */
+}
+
+/* Cambiar color del punto activo */
+.swiper-pagination-bullet-active {
+  background: black !important;
+}
+
