@@ -1,37 +1,17 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, MapPin } from 'lucide-react';
+import { useState } from 'react';
+import { Menu, X, MapPin, Search, ShoppingBag } from 'lucide-react';
 import { FaInstagram, FaFacebookF, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 
 import BusinessHours from './BusinessHours';
 import MapModal from './MapModal';
 
 const NavbarUser = ({ store, additionalData }) => {
-  //console.log('store', store);
   const [isOpen, setIsOpen] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!store || !store.id) return;
-
-        if (!additionalData || !additionalData.user_id) return;
-
-      } catch (error) {
-        console.error('Error al cargar datos:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-
-    fetchData();
-  }, []);
 
   return (
     <>
@@ -46,10 +26,17 @@ const NavbarUser = ({ store, additionalData }) => {
               />
             ) : (
               <h1 className="text-lg font-bold text-gray-800">
-                {store ? store.brand_name : 'Cargando...'}
+                {store?.brand_name || 'Cargando...'}
               </h1>
             )}
           </div>
+
+          <button className="text-gray-700">
+              <Search className="w-6 h-6" />
+            </button>
+            <button className="text-gray-700">
+              <ShoppingBag className="w-6 h-6" />
+          </button>
 
           {/* Botón hamburguesa SOLO en mobile */}
           <button onClick={toggleMenu} className="md:hidden text-gray-700 focus:outline-none">
@@ -60,7 +47,6 @@ const NavbarUser = ({ store, additionalData }) => {
           <div className="hidden md:flex items-center gap-8 text-sm">
             <BusinessHours userId={store?.user_id} />
 
-            {/* Ubicación con modal */}
             <button
               onClick={() => setIsMapOpen(true)}
               className="flex items-center gap-1 text-gray-800 font-semibold"
@@ -69,38 +55,27 @@ const NavbarUser = ({ store, additionalData }) => {
               <span>Ubicación</span>
             </button>
 
-            <div className="hidden md:flex items-center">
-              {additionalData?.whatsapp && (
-                <a
-                  href={additionalData.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-600 hover:text-green-700"
-                >
-                  <FaWhatsapp className="w-5 h-5" />
-                </a>
-              )}
-            </div>
+            {additionalData?.whatsapp && (
+              <a
+                href={additionalData.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-600 hover:text-green-700"
+              >
+                <FaWhatsapp className="w-5 h-5" />
+              </a>
+            )}
 
-            {/* Redes sociales */}
             <ul className="flex gap-3">
-              {/* {console.log('informacion adicional',additionalInfo?.social_links)} */}
               {additionalData?.social_links?.map((link, i) => {
                 const getIcon = () => {
-                  if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }}/>;
-                  if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }}/>;
-                  if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }}/>;
-                  return <span className="text-xs">🔗</span>; // ícono genérico si no se reconoce
+                  if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }} />;
+                  if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }} />;
+                  if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }} />;
+                  return <span className="text-xs">🔗</span>;
                 };
-
                 return (
-                  <a
-                    key={i}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800"
-                  >
+                  <a key={i} href={link} target="_blank" rel="noopener noreferrer">
                     {getIcon()}
                   </a>
                 );
@@ -114,7 +89,6 @@ const NavbarUser = ({ store, additionalData }) => {
           <div className="bg-gray-100 p-4 border-t text-sm space-y-4 md:hidden">
             <BusinessHours userId={store?.user_id} />
 
-            {/* Botón Ubicación */}
             <button
               className="flex items-center gap-1 text-blue-600 font-semibold"
               onClick={() => setIsMapOpen(true)}
@@ -123,48 +97,35 @@ const NavbarUser = ({ store, additionalData }) => {
               <span>Ubicación</span>
             </button>
 
-            {/* 📱 Mobile - texto “Contacto”, logo y número */}
-            <div className="md:hidden">
-              {additionalData?.whatsapp && (
-                <div className="flex flex-col gap-1 text-blue-600">
-                  <span className="font-semibold text-gray-800">Contacto</span>
-                  <a
-                    href={additionalData.whatsapp}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-green-600"
-                  >
-                    <FaWhatsapp className="w-5 h-5" />
-                    <span>
-                      {additionalData.whatsapp.replace('https://wa.me/549', '') || 'WhatsApp'}
-                    </span>
-                  </a>
-                </div>
-              )}
-            </div>
+            {additionalData?.whatsapp && (
+              <div className="flex flex-col gap-1 text-blue-600">
+                <span className="font-semibold text-gray-800">Contacto</span>
+                <a
+                  href={additionalData.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-green-600"
+                >
+                  <FaWhatsapp className="w-5 h-5" />
+                  <span>{additionalData.whatsapp.replace('https://wa.me/549', '') || 'WhatsApp'}</span>
+                </a>
+              </div>
+            )}
 
-            {/* Redes sociales mobile*/}
             {additionalData?.social_links?.length > 0 &&
               additionalData.social_links.some(link => link.trim() !== '') && (
-                <div className="md:hidden flex flex-col gap-1 text-blue-600">
+                <div className="flex flex-col gap-1">
                   <span className="font-semibold text-gray-800">Redes sociales</span>
                   <div className="flex gap-3 mt-1">
                     {additionalData.social_links.map((link, i) => {
                       const getIcon = () => {
-                        if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }}/>;
-                        if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }}/>;
-                        if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }}/>;
+                        if (link.includes('instagram')) return <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }} />;
+                        if (link.includes('facebook')) return <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }} />;
+                        if (link.includes('tiktok')) return <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }} />;
                         return <span className="text-xs">🔗</span>;
                       };
-
                       return (
-                        <a
-                          key={i}
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800"
-                        >
+                        <a key={i} href={link} target="_blank" rel="noopener noreferrer">
                           {getIcon()}
                         </a>
                       );
@@ -172,12 +133,10 @@ const NavbarUser = ({ store, additionalData }) => {
                   </div>
                 </div>
               )}
-
           </div>
         )}
       </nav>
 
-      {/* Este modal está fuera del nav y funciona SIEMPRE */}
       <MapModal
         isOpen={isMapOpen}
         onClose={() => setIsMapOpen(false)}
@@ -186,9 +145,8 @@ const NavbarUser = ({ store, additionalData }) => {
         address={store?.address}
       />
     </>
-
-
   );
 };
 
 export default NavbarUser;
+

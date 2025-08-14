@@ -55,7 +55,7 @@ const AllProductsByCategory = () => {
           <div 
             key={prod.id} 
             className="rounded-xl overflow-hidden mt-7 shadow"
-            onClick={() => navigate(`/store/${slug}/${userId}/product/${prod.id}`)}
+            onClick={() => navigate(`/${slug}/${userId}/product/${prod.id}`)}
             >
             <div className="aspect-square">
               <img
