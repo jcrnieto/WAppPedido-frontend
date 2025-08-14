@@ -10,7 +10,7 @@ const Categories = ({ categories }) => {
         <div
           key={cat.id}
           className="bg-white border border-gray-200 rounded-xl shadow hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-          onClick={() => navigate(`/store/${slug}/${cat.user_id}/category/${cat.id}`)}
+          onClick={() => navigate(`/${slug}/${cat.user_id}/category/${cat.id}`)}
         >
           <div className="w-full aspect-square overflow-hidden rounded-t-xl">
             <img
