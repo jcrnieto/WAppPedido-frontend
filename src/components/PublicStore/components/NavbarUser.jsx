@@ -4,10 +4,17 @@ import { FaInstagram, FaFacebookF, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 
 import BusinessHours from './BusinessHours';
 import MapModal from './MapModal';
+import CartDropDawn from './products/CartSummary';
+
+import { useCart } from "../../../context/CartContext";
 
 const NavbarUser = ({ store, additionalData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [openCart, setOpenCart] = useState(false);
+  // console.log("additionalData", additionalData?.whatsapp);
+  const { cart } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -16,13 +23,13 @@ const NavbarUser = ({ store, additionalData }) => {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
-        <div className="flex items-center justify-between px-4 py-3 md:px-8 md:py-4">
+        <div className="flex items-center justify-between px-4 py-2 md:px-8 md:py-4">
           <div className="flex items-center gap-2">
             {additionalData?.logo_url ? (
               <img
                 src={additionalData.logo_url}
                 alt="Logo"
-                className="w-28 h-28 md:w-28 md:h-28 object-contain"
+                className="w-16 h-16 md:w-28 md:h-28 object-contain"
               />
             ) : (
               <h1 className="text-lg font-bold text-gray-800">
@@ -32,11 +39,19 @@ const NavbarUser = ({ store, additionalData }) => {
           </div>
 
           <button className="text-gray-700">
-              <Search className="w-6 h-6" />
-            </button>
-            <button className="text-gray-700">
-              <ShoppingBag className="w-6 h-6" />
+            <Search className="w-6 h-6" />
           </button>
+          <button onClick={() => setOpenCart(true)} className="relative">
+            <ShoppingBag size={24} />
+            {/* Badge con cantidad */}
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                {totalItems}
+              </span>
+            )}
+          </button>
+
+          <CartDropDawn open={openCart} onClose={() => setOpenCart(false)} whatsappNumber={additionalData?.whatsapp}/>
 
           {/* Botón hamburguesa SOLO en mobile */}
           <button onClick={toggleMenu} className="md:hidden text-gray-700 focus:outline-none">

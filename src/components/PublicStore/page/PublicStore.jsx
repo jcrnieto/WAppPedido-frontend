@@ -10,7 +10,7 @@ const PublicStore = () => {
   if (!store) return <div>No se encontró esta tienda.</div>;
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className="px-4 py-4 md:px-2 md:py-0 max-w-2xl mx-auto">
       <BrandInformation additionalData={additionalData} />
       <AdditionalDescription additionalData={additionalData} />
       <Categories categories={categories} />

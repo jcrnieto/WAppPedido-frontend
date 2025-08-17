@@ -37,10 +37,10 @@ const AllProductsByCategory = () => {
   }, [categoryId, userId]);
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       {/* Botón volver */}
       <button
-        className="flex items-center text-black-600 mb-4"
+        className="flex items-center text-black-600 mb-4 md:pt-16"
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="w-5 h-5 mr-2" /> 
