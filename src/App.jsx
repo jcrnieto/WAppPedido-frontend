@@ -14,6 +14,7 @@ import PublicStore from './components/PublicStore/page/PublicStore';
 import CategoryProducts from './components/PublicStore/page/AllProductsByCategory';
 import DetailProduct from './components/PublicStore/page/DetailProduct';
 import PublicLayout from './components/PublicStore/page/PublicLayout';
+import SearchResults from './components/PublicStore/components/Navbar/SearchResult';
 
 function App() {
 
@@ -51,8 +52,9 @@ function App() {
           {/* Rutas públicas con el mismo navbar */}
           <Route path="/:slug" element={<PublicLayout />}>
             <Route index element={<PublicStore />}           />
-            <Route path="/:slug/:userId/category/:categoryId" element={<CategoryProducts />} />
-            <Route path="/:slug/:userId/product/:productId" element={<DetailProduct />}/>
+            <Route path=":userId/category/:categoryId" element={<CategoryProducts />} />
+            <Route path=":userId/product/:productId" element={<DetailProduct />}/>
+            <Route path=":userId/search" element={<SearchResults />} />
           </Route>
         </Routes>
       </Router>

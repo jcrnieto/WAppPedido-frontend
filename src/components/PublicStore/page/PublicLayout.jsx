@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../../../config/supabaseConfig";
-import NavbarUser from "../../PublicStore/components/NavbarUser";
+import NavbarUser from "../../PublicStore/components/Navbar/NavbarUser";
 
 const PublicLayout = () => {
   const { slug } = useParams();
@@ -9,6 +9,7 @@ const PublicLayout = () => {
   const [additionalData, setAdditionalData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState(null);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +20,6 @@ const PublicLayout = () => {
           .select("*")
           .eq("public_url", `/${slug}`)
           .maybeSingle();
-
         if (storeError) throw storeError;
         if (!storeData) throw new Error("Tienda no encontrada");
 
@@ -43,6 +43,14 @@ const PublicLayout = () => {
         if (categoriesError) throw categoriesError;
         //  console.log('📦 Categorías:', categoriesData);
         setCategories(categoriesData);
+
+        const { data: productsData, error: productsError } = await supabase
+          .from("products_wapppedidos")
+          .select("*")
+          .eq("user_id", storeData.user_id);
+        if (productsError) throw productsError;
+        setProducts(productsData);
+        // console.log('📦 Productos:', productsData);
       } catch (error) {
         console.error("❌ Error cargando layout:", error);
       } finally {
@@ -58,7 +66,7 @@ const PublicLayout = () => {
 
   return (
     <div className="pt-20 max-w-2xl mx-auto">
-      <NavbarUser store={store} additionalData={additionalData} />
+      <NavbarUser store={store} additionalData={additionalData} productsId={products.id}/>
       <Outlet context={{ store, additionalData, categories }} />
     </div>
   );

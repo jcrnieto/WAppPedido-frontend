@@ -1,19 +1,28 @@
 import { useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+
 import { Menu, X, MapPin, Search, ShoppingBag } from 'lucide-react';
 import { FaInstagram, FaFacebookF, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 
-import BusinessHours from './BusinessHours';
-import MapModal from './MapModal';
-import CartDropDawn from './products/CartSummary';
+import BusinessHours from '../BusinessHours';
+import MapModal from '../MapModal';
+import CartDropDawn from '../products/CartSummary';
 
-import { useCart } from "../../../context/CartContext";
+import { useCart } from "../../../../context/CartContext";
+import { useSearch } from "../../../../context/SearchContext";
 
 const NavbarUser = ({ store, additionalData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
-  // console.log("additionalData", additionalData?.whatsapp);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const navigate = useNavigate();
+  const { slug } = useParams();
+
   const { cart } = useCart();
+  const { searchQuery, setSearchQuery } = useSearch();
+
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleMenu = () => {
@@ -38,25 +47,78 @@ const NavbarUser = ({ store, additionalData }) => {
             )}
           </div>
 
-          <button className="text-gray-700">
-            <Search className="w-6 h-6" />
-          </button>
-          <button onClick={() => setOpenCart(true)} className="relative">
-            <ShoppingBag size={24} />
-            {/* Badge con cantidad */}
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
-                {totalItems}
-              </span>
+          {/* Íconos de búsqueda y carrito - SOLO desktop */}
+          <div className="hidden md:flex items-center gap-4">
+            {showSearch ? (
+              <input
+                type="text"
+                placeholder="Buscar producto..."
+                value={searchQuery}
+                onChange={(e) => {
+                  const q = e.target.value;
+                  setSearchQuery(q);
+                  if (q.trim()) {
+                    navigate(`/${slug}/${store?.user_id}/search?query=${encodeURIComponent(q)}`);
+                  }
+                }}
+                className="w-full border rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            ) : (
+              <button onClick={() => setShowSearch(true)}>
+                <Search className="w-6 h-6 text-gray-700" />
+              </button>
             )}
-          </button>
+
+            <button onClick={() => setOpenCart(true)} className="relative">
+              <ShoppingBag size={24} />
+              {/* Badge con cantidad */}
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Íconos móviles + menú hamburguesa */}
+          <div className="flex items-center gap-3 md:hidden">
+            {showSearch ? (
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={searchQuery}
+                onChange={(e) => {
+                  const q = e.target.value;
+                  setSearchQuery(q);
+                  if (q.trim()) {
+                    navigate(`/${slug}/${store?.user_id}/search?query=${encodeURIComponent(q)}`);
+                  }
+                }}
+                className="w-32 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            ) : (
+              <button onClick={() => setShowSearch(true)}>
+                <Search className="w-5 h-5 text-gray-700" />
+              </button>
+            )}
+
+            <button onClick={() => setOpenCart(true)} className="relative">
+              <ShoppingBag size={20} />
+              {/* Badge con cantidad */}
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* Botón hamburguesa */}
+            <button onClick={toggleMenu} className="text-gray-700 focus:outline-none">
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
 
           <CartDropDawn open={openCart} onClose={() => setOpenCart(false)} whatsappNumber={additionalData?.whatsapp}/>
-
-          {/* Botón hamburguesa SOLO en mobile */}
-          <button onClick={toggleMenu} className="md:hidden text-gray-700 focus:outline-none">
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
 
           {/* Menú horizontal SOLO en desktop */}
           <div className="hidden md:flex items-center gap-8 text-sm">
@@ -164,4 +226,3 @@ const NavbarUser = ({ store, additionalData }) => {
 };
 
 export default NavbarUser;
-
