@@ -3,6 +3,8 @@
 @import "preline/variants.css";
 @source "../node_modules/preline/dist/*.js";
 
+/* @plugin "@tailwindcss/forms"; */
+
 .swiper-button-next,
 .swiper-button-prev {
   color: black !important; /* flechas negras */

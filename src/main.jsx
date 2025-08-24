@@ -7,6 +7,7 @@ import { ClerkProvider } from '@clerk/clerk-react'
 import { Toaster } from 'sonner';
 import { CartProvider } from './context/CartContext.jsx';
 import { SearchProvider } from './context/SearchContext';
+import "preline/preline";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 

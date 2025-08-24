@@ -12,7 +12,7 @@ const NavbarHome = () => {
   ];
 
   return (
-    <nav className="bg-gray-800 text-white px-6 py-4 shadow-md">
+    <nav className="bg-green-600 text-white px-6 py-4 shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-xl font-bold">WA PEDIDOS</h1>
 
