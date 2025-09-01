@@ -1,4 +1,9 @@
+import { useNavigate } from "react-router-dom";
+
 const AddresedTo = () => {
+
+  const navigate = useNavigate();
+
   return (
     <section className="bg-white py-16 px-6 md:px-12 lg:px-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -24,7 +29,10 @@ const AddresedTo = () => {
           </p>
 
           <div className="mt-8 flex gap-4">
-            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md">
+            <button
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md"
+              onClick={() => navigate('/register')}
+            >
               Empieza Gratis
             </button>
             <button className="border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg font-semibold text-gray-700">
