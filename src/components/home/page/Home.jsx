@@ -4,7 +4,7 @@ import CardsPlans from '../components/CardsPlans';
 import CommonQuestions from '../components/CommonQuestions';
 import ContactForm from '../components/ContactForm';
 import FeatureCards from '../components/FeatureCards';
-import Functionalities from '../components/functionalities';
+import Functionalities from '../components/Functionalities';
 import HowItWorks from '../components/HowItsWorks';
 import { WhatsAppFloat } from '../components/WhatsApp';
 // import SummaryVideo from '../components/SummaryVideo';
