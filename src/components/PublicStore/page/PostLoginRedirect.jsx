@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useUser } from '@clerk/clerk-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +7,8 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"
 
 const PostLoginRedirect = () => {
   const { user } = useUser();
+  const { getToken } = useAuth();
+
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   
@@ -14,9 +16,17 @@ const PostLoginRedirect = () => {
   const syncUser = async () => {
     if (!user || checked) return;
     setChecked(true);
-    
+
+    // const userId = user?.id;
     const email = user?.emailAddresses?.[0]?.emailAddress;
     if (!email) return;
+
+    const token = await getToken();
+
+    const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+    };
 
     try {
       // 1. Verificar si ya existe en tu tabla personalizada
@@ -25,14 +35,14 @@ const PostLoginRedirect = () => {
         console.log('esto es la baseUrl de render backend', baseUrl);
         await new Promise(res => setTimeout(res, 500));
         const response = await axios.get(`${baseUrl}/users/by-email/${email}`);
-        console.log("🟠 Response del backend:", response);
+        //console.log("🟠 Response del backend:", response);
         userData = response.data;
         console.log('🟢 Usuario ya existe en Supabase');
       } catch (getError) {
         console.warn('⚠️ Usuario no encontrado. Registrando nuevo usuario...');
         
         // 2. Si no existe, lo registramos
-        const registerResponse = await axios.post(`${baseUrl}/users/register`, { email });
+        const registerResponse = await axios.post(`${baseUrl}/users/register`, { email }, { headers });
         userData = registerResponse.data;
       }
 
@@ -41,9 +51,9 @@ const PostLoginRedirect = () => {
         return;
       }
       console.log('🟢 Usuario verificado/registrado:', userData);
-      console.log('userId:', userData.id);
-      console.log('profileCompleted:', userData.profile_completed);
-      console.log('personalData:', userData.personalData?.[0]);
+      //console.log('userId:', userData.id);
+      //console.log('profileCompleted:', userData.profile_completed);
+      //console.log('personalData:', userData.personalData?.[0]);
 
       const personalDataEntry = userData.personalData;
       

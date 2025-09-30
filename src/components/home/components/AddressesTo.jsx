@@ -5,7 +5,7 @@ const AddresedTo = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="bg-white py-16 px-6 md:px-12 lg:px-24">
+    <section className="bg-white py-16 px-6 md:px-12 lg:px-24 mt-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         
         {/* Texto */}

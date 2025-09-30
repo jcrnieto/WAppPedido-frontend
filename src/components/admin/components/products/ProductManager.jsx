@@ -10,7 +10,7 @@ const ProductManager = ({ storeId }) => {
 
   const getProductsWithoutCategory = async () => {
     try {
-      const { data } = await axios.get(`${baseUrl}/products/no-category`);
+      const { data } = await axios.get(`${baseUrl}/products/no-category/${storeId}`);
       // return data;
       setProducts(data);
     } catch (error) {
@@ -24,7 +24,7 @@ const ProductManager = ({ storeId }) => {
   }, [storeId]);
 
   const handleDelete = async (id) => {
-    console.log('handleDelete called with id:', id);
+    //console.log('handleDelete called with id:', id);
     if (!confirm("¿Estás seguro de eliminar este producto?")) return;
     try {
       await axios.delete(`${baseUrl}/products/deleteProduct/${id}`);

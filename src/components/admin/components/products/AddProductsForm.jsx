@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { supabase } from '../../../../config/supabaseConfig';
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
+  const { getToken } = useAuth();
+  const { user } = useUser();
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -128,11 +132,23 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
         category_id: categoryId,
         user_id: storeId,
       };
+      console.log('Payload a enviar:', payload);
+      
+      const token = await getToken();
+      const userId = user?.id;
+      // console.log('userId en AddProductForm:', userId);
+      // console.log('token en AddProductForm:', token);
 
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "x-user-id": userId ?? "",
+        "Content-Type": "application/json",
+      };
+      
       if (product?.id) {
         await axios.patch(`${baseUrl}/products/updateProduct/${product.id}`, payload);
       } else {
-        await axios.post(`${baseUrl}/products/createProduct`, payload);
+        await axios.post(`${baseUrl}/products/createProduct`,payload, { headers });        
       }
 
       // ✅ Limpiar el formulario después de guardar
