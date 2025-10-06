@@ -11,7 +11,7 @@ export default function CartSummary({ open, onClose, whatsappNumber }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-end z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-end z-50">
       <div className="bg-white w-80 h-full shadow-lg p-4 flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Tu Carrito</h2>
