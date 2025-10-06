@@ -7,7 +7,7 @@ import {useParams, useNavigate } from 'react-router-dom';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const AllProductByIdCategoryIsNull = ({userId}) => {
-    console.log("userId en allProduct:", userId);
+    //console.log("userId en allProduct:", userId);
     const [products, setProducts] = useState([]);
     const { searchQuery } = useSearch();
     const navigate = useNavigate();

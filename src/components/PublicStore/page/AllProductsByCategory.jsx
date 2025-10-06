@@ -39,7 +39,7 @@ const AllProductsByCategory = () => {
   }, [categoryId, userId]);
 
   return (
-    <div className="p-2">
+    <div className="p-2 bg-[#F4F9F4]">
       {/* Botón volver */}
       <button
         className="flex items-center text-black-600 mb-4 md:pt-16"
