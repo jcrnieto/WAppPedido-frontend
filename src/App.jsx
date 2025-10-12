@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import RouteProgress from '../src/utils/RouteProgress'
 
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
@@ -22,6 +23,7 @@ function App() {
   return (
     <>
       <Router>
+        <RouteProgress />
         <Routes>
           <Route element={<LayoutMain />}>
             <Route path="/" element={<Home />} />

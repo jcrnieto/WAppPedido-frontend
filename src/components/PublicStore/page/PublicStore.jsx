@@ -1,4 +1,6 @@
 import { useOutletContext } from 'react-router-dom';
+import StoreLoadingSkeleton from '../../../utils/StoreLoadingSkeleton';
+
 import Categories from '../components/category/Categories';
 import AdditionalDescription from '../components/AdditionalDescription';
 import BrandInformation from '../components/BrandInformation';
@@ -6,8 +8,9 @@ import AllProductByIdCategoryIsNull from '../components/products/AllProductByIdC
 
 const PublicStore = () => {
   const { store, additionalData, categories, loading } = useOutletContext();
-  
-  if (loading) return <div>Cargando tienda...</div>;
+  // console.log('PublicStore loading:', loading);
+  // if (loading) return <div>Cargando tienda...</div>;
+  if (loading) return <StoreLoadingSkeleton />;
   if (!store) return <div>No se encontró esta tienda.</div>;
 
   return (

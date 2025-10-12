@@ -62,7 +62,7 @@ const BusinessHours = ({ userId }) => {
               transition={{ duration: 0.2 }}
               className="bg-white rounded-2xl shadow-xl w-[90%] max-w-md p-6"
             >
-              <h2 className="text-lg font-bold mb-4 text-center text-blue-700">🕒 Horarios de atención</h2>
+              <h2 className="text-lg font-bold mb-4 text-center text-green-700">🕒 Horarios de atención</h2>
 
               <ul className="space-y-2 text-sm text-gray-800">
                 {hours.map(({ day, from_1, to_1, from_2, to_2 }) => (
@@ -77,7 +77,7 @@ const BusinessHours = ({ userId }) => {
               </ul>
 
               <button
-                className="mt-6 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                className="mt-6 w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
                 onClick={() => setIsOpen(false)}
               >
                 Cerrar
