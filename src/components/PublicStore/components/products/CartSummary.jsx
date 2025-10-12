@@ -1,14 +1,32 @@
 import { X } from "lucide-react";
+import { useState } from "react";
 import { useCart } from "../../../../context/CartContext"; 
-import CheckoutButton from "./CheckoutButton";
+import CheckoutModal from "./CheckoutModal";
+// import CheckoutButton from "./CheckoutButton";
 
 export default function CartSummary({ open, onClose, whatsappNumber }) {
   // console.log("numero de whatsapp", whatsappNumber);
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, removeFromCart } = useCart();
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  // 👉 Estado levantado (persistirá aunque el modal se desmonte)
+  const [checkoutData, setCheckoutData] = useState({
+    name: "",
+    delivery: "sucursal",   // "sucursal" | "domicilio"
+    address: "",
+    payment: "efectivo",    // "efectivo" | "transferencia" | "combinado"
+    notes: "",
+  });
 
   if (!open) return null;
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleOpenCheckout = () => {
+    // si querés cerrar el carrito cuando se abre el modal, descomentá:
+    // onClose?.();
+    setCheckoutOpen(true);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-end z-50">
@@ -45,16 +63,25 @@ export default function CartSummary({ open, onClose, whatsappNumber }) {
         {cart.length > 0 && (
           <div className="mt-4">
             <p className="text-right font-semibold">Total: ${total}</p>
-            {/* <button
-              onClick={clearCart}
-              className="w-full bg-green-600 text-white py-2 rounded-lg mt-2"
-            >
-              Comprar
-            </button> */}
-            <CheckoutButton cart={cart} total={total} whatsappNumber={whatsappNumber} />
+            {/* <CheckoutButton cart={cart} total={total} whatsappNumber={whatsappNumber} /> */}
+            <button
+                onClick={handleOpenCheckout}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full mt-4"
+              >
+              Comprar por WhatsApp
+            </button>
           </div>
         )}
       </div>
+
+      {/* Modal de confirmación (z-60) */}
+      <CheckoutModal
+        open={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        whatsappNumber={whatsappNumber}
+        formData={checkoutData}
+        onFormChange={setCheckoutData}  
+      />
     </div>
   );
 }

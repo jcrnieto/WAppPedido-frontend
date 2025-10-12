@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import SearchResults from "../components/Navbar/SearchResult";
+import Breadcrumbs from '../../../utils/Breadcrumbs';
 import { useSearch } from '../../../context/SearchContext';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -38,15 +38,21 @@ const AllProductsByCategory = () => {
     fetchCategoryAndProducts();
   }, [categoryId, userId]);
 
+  const homePath = `/${slug}`;
+  // console.log("homePath:", homePath);
+  const categoriasPath = null;
+  // console.log("categoriasPath:", categoriasPath);
+
   return (
     <div className="p-2 bg-[#F4F9F4]">
-      {/* Botón volver */}
-      <button
-        className="flex items-center text-black-600 mb-4 md:pt-16"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft className="w-5 h-5 mr-2" />
-      </button>
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={[
+          { label: "Inicio", to: homePath },
+          // categoriasPath ? { label: "Categorías", to: categoriasPath } : { label: "Categorías" },
+          { label: categoryName || "…" },
+        ]}
+      />
 
       {/* Si hay búsqueda, mostrar SearchResults */}
       {searchQuery ? (
@@ -62,7 +68,10 @@ const AllProductsByCategory = () => {
                   key={prod.id}
                   className="rounded-xl overflow-hidden mt-7 shadow"
                   onClick={() =>
-                    navigate(`/${slug}/${userId}/product/${prod.id}`)
+                    // navigate(`/${slug}/${userId}/product/${prod.id}`)
+                    navigate(`/${slug}/${userId}/product/${prod.id}`, {
+                      state: { categoryId, categoryName },  
+                    })
                   }
                 >
                   <div className="aspect-square">

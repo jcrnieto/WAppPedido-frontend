@@ -2,6 +2,7 @@ import { Outlet, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "../../../config/supabaseConfig";
 import NavbarUser from "../../PublicStore/components/Navbar/NavbarUser";
+import StoreLoadingSkeleton from '../../../utils/StoreLoadingSkeleton';
 
 const PublicLayout = () => {
   const { slug } = useParams();
@@ -61,7 +62,8 @@ const PublicLayout = () => {
     fetchData();
   }, [slug]);
 
-  if (loading) return <div>Cargando...</div>;
+  // if (loading) return <div>Cargando...</div>;
+  if (loading) return <StoreLoadingSkeleton />;
   if (!store) return <div>No se encontró esta tienda.</div>;
 
   return (
