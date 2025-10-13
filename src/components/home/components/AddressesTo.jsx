@@ -35,9 +35,9 @@ const AddresedTo = () => {
             >
               Empieza Gratis
             </button>
-            <button className="border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg font-semibold text-gray-700">
+            {/* <button className="border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-lg font-semibold text-gray-700">
               Ver Ejemplos
-            </button>
+            </button> */}
           </div>
         </div>
 

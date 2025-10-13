@@ -3,7 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
+import { esES } from "@clerk/localizations";
+
 import { Toaster } from 'sonner';
+
 import { CartProvider } from './context/CartContext.jsx';
 import { SearchProvider } from './context/SearchContext';
 import "preline/preline";
@@ -16,7 +19,7 @@ if (!PUBLISHABLE_KEY) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl='/'>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl='/' localization={esES}>
     <SearchProvider>
     <CartProvider>
       <App />
