@@ -1,7 +1,8 @@
-// import { FaPhone, FaFacebook, FaInstagram } from "react-icons/fa";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const ContactForm = () => {
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -141,7 +142,7 @@ const ContactForm = () => {
                 Creá tu catálogo hoy y empezá a recibir pedidos por WhatsApp
               </p>
               <a
-                href="#contacto"
+                onClick={() => navigate('/register')}
                 className="inline-block px-6 py-3 bg-white text-primary rounded-xl font-semibold hover:bg-slate-100 transition-colors"
               >
                 Probar ahora

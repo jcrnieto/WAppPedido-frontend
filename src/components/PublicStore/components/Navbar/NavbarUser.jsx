@@ -123,98 +123,92 @@ const NavbarUser = ({ store, additionalData }) => {
                 </button>
               }
             >
-              <div className="text-sm mt-8">
-                <div className="grid gap-6"> 
-                  {/* Horarios de atención */}
-                  <div className="flex items-start gap-2">
-                    <Clock className="h-4 w-4 text-green-600 mt-1" />
-                    <div className="text-gray-900">
-                      <BusinessHours userId={store?.user_id} />
-                    </div>
-                  </div>
-                  
-
-                  {/* Ubicación */}
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 font-semibold text-gray-900">
-                      <MapPin className="h-4 w-4 text-green-600" />
-                      <span>Ubicación</span>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setIsMapOpen(true);
-                        setIsOpen(false); // opcional: cerrar el sheet al abrir el mapa
-                      }}
-                      className="ml-6 text-green-700 hover:underline inline-flex items-center gap-2"
-                    >
-                      Ver en mapa
-                    </button>
-                  </div>
-
-                  {/* Contacto (WhatsApp) */}
-                  {additionalData?.whatsapp && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 font-semibold text-gray-900">
-                        <Phone className="h-4 w-4 text-green-600" />
-                        <span>Contacto</span>
-                      </div>
-                      <a
-                        href={additionalData.whatsapp}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-6 inline-flex items-center gap-2 text-green-700 hover:underline"
-                        onClick={() => setIsOpen(false)} // opcional
-                      >
-                        <FaWhatsapp className="w-5 h-5" />
-                        <span>{additionalData.whatsapp.replace('https://wa.me/549', '') || 'WhatsApp'}</span>
-                      </a>
-                    </div>
-                  )}
-
-                  {/* Redes sociales */}
-                  {(additionalData?.social_links?.length ?? 0) > 0 &&
-                    additionalData.social_links.some(link => (link ?? '').trim() !== '') && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 font-semibold text-gray-900">
-                          <Share2 className="h-4 w-4 text-green-600" />
-                          <span>Redes sociales</span>
-                        </div>
-
-                        <div className="ml-6 flex items-center gap-3">
-                          {additionalData.social_links
-                            .filter(link => (link ?? '').trim() !== '')
-                            .map((link, i) => {
-                              const l = link.toLowerCase();
-                              const icon =
-                                l.includes('instagram')
-                                  ? <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }} />
-                                  : l.includes('facebook')
-                                  ? <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }} />
-                                  : l.includes('tiktok')
-                                  ? <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }} />
-                                  : null;
-
-                              if (!icon) return null; // si no reconocemos la red, no mostramos nada
-
-                              return (
-                                <a
-                                  key={i}
-                                  href={link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  aria-label={l.includes('instagram') ? 'Instagram' : l.includes('facebook') ? 'Facebook' : 'TikTok'}
-                                  onClick={() => setIsOpen(false)} // opcional: cerrar al click
-                                  className="hover:opacity-80 transition"
-                                >
-                                  {icon}
-                                </a>
-                              );
-                            })}
-                        </div>
-                      </div>
-                    )}
+              <div className="text-sm mt-8 space-y-6">
+            {/* Horarios de atención */}
+            <div className="space-y-2 mb-12">
+              <div className="flex items-start gap-2">
+                <Clock className="h-4 w-4 text-green-600 mt-1" />
+                <div className="text-gray-900 font-semibold">
+                  <BusinessHours userId={store?.user_id} />
                 </div>
               </div>
+            </div>
+
+            {/* Ubicación */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 font-semibold text-gray-900">
+                <MapPin className="h-4 w-4 text-green-600" />
+                <span>Ubicación</span>
+              </div>
+              <button
+                onClick={() => {
+                  setIsMapOpen(true);
+                  setIsOpen(false);
+                }}
+                className="ml-6 text-green-700 hover:underline inline-flex items-center gap-2"
+              >
+                Ver en mapa
+              </button>
+            </div>
+
+            {/* Contacto (WhatsApp) */}
+            {additionalData?.whatsapp && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 font-semibold text-gray-900">
+                  <Phone className="h-4 w-4 text-green-600" />
+                  <span>Contacto</span>
+                </div>
+                <a
+                  href={additionalData.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-6 inline-flex items-center gap-2 text-green-700 hover:underline"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FaWhatsapp className="w-5 h-5" />
+                  <span>{additionalData.whatsapp.replace('https://wa.me/549', '') || 'WhatsApp'}</span>
+                </a>
+              </div>
+            )}
+
+            {/* Redes sociales */}
+            {(additionalData?.social_links?.length ?? 0) > 0 &&
+              additionalData.social_links.some(link => (link ?? '').trim() !== '') && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 font-semibold text-gray-900">
+                    <Share2 className="h-4 w-4 text-green-600" />
+                    <span>Redes sociales</span>
+                  </div>
+                  <div className="ml-6 flex items-center gap-3">
+                    {additionalData.social_links
+                      .filter(link => (link ?? '').trim() !== '')
+                      .map((link, i) => {
+                        const l = link.toLowerCase();
+                        const icon =
+                          l.includes('instagram') ? <FaInstagram className="w-5 h-5" style={{ color: '#E1306C' }} /> :
+                          l.includes('facebook')  ? <FaFacebookF className="w-5 h-5" style={{ color: '#1877F2' }} /> :
+                          l.includes('tiktok')    ? <FaTiktok className="w-5 h-5" style={{ color: '#69C9D0' }} /> :
+                          null;
+                        if (!icon) return null;
+                        return (
+                          <a
+                            key={i}
+                            href={link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={l.includes('instagram') ? 'Instagram' : l.includes('facebook') ? 'Facebook' : 'TikTok'}
+                            onClick={() => setIsOpen(false)}
+                            className="hover:opacity-80 transition"
+                          >
+                            {icon}
+                          </a>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+          </div>
+
             </RightSheet>
           </div>
 

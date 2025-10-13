@@ -17,7 +17,7 @@ const CardsPlans = () => {
     },
     {
       name: "Plan Exterior",
-      price: "USD $15",
+      price: "USD $20",
       period: "/mes",
       currency: "USD",
       features: [

@@ -1,18 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const NavbarHome = () => {
-  // const [open, setOpen] = useState(false);
-  // const toggleMenu = () => setOpen(!open);
-  // const navigate = useNavigate();
-
-  // const navItems = [
-  //   { href: "#ingresar", label: "Ingresar", isLogin: true },
-  //   { href: "#home", label: "Inicio" }, 
-  //   { href: "#projects", label: "Contratar Servicio" },
-  //   { href: "#contact", label: "Contacto" },
-  // ];
+  const navigate = useNavigate();
+  
   const [isOpen, setIsOpen] = useState(false)
 
   const navLinks = [
@@ -47,11 +39,13 @@ const NavbarHome = () => {
                 {link.label}
               </a>
             ))}
-            <a href="/admin" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            <a 
+             onClick={() => navigate('/login')} 
+             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
               Iniciar Sesión
             </a>
             <a
-              href="#contacto"
+              onClick={() => navigate('/register')}
               className="px-5 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-secondary transition-colors"
             >
               Registrarse
@@ -89,8 +83,9 @@ const NavbarHome = () => {
                 </a>
               ))}
               <a
-                href="/admin"
-                onClick={() => setIsOpen(false)}
+                // href="/admin"
+                // onClick={() => setIsOpen(false)}
+                onClick={() => navigate('/login')}
                 className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
               >
                 Iniciar Sesión
