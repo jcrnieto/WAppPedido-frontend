@@ -4,7 +4,7 @@ import { supabase } from '../../../../config/supabaseConfig';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const AddCategoryForm = ({ storeId, category, onSuccess, onCancelEdit }) => {
+const AddCategoryForm = ({ storeId, category, onSuccess, onCancelEdit, storeBrandName }) => {
   const [name, setName] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
@@ -33,7 +33,7 @@ const AddCategoryForm = ({ storeId, category, onSuccess, onCancelEdit }) => {
 
       if (imageFile) {
         const fileName = `${Date.now()}-${imageFile.name}`;
-        const filePath = `wapedidos/categories/${fileName}`;
+        const filePath = `${storeBrandName}/categories/${fileName}`;
         const { error: uploadError } = await supabase.storage.from('wapedidos').upload(filePath, imageFile);
         if (uploadError) throw uploadError;
 

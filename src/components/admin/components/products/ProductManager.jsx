@@ -4,7 +4,7 @@ import AddProductForm from './AddProductsForm';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const ProductManager = ({ storeId }) => {
+const ProductManager = ({ storeId, storeBrandName }) => {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
 
@@ -84,6 +84,7 @@ const ProductManager = ({ storeId }) => {
       <div>
         <AddProductForm
           storeId={storeId}
+          storeBrandName={storeBrandName}
           product={editingProduct}
           onSuccess={handleFormSuccess}
           onCancelEdit={() => setEditingProduct(null)}

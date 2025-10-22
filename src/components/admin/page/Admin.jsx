@@ -58,8 +58,8 @@ const Admin = () => {
           adminUrl={`https://w-app-pedido-frontend.vercel.app/${store.admin_url}`}
         />
         {/* <PostProduct /> */}
-        <CategoryManager storeId={store.user_id} />
-        <ProductManager storeId={store.user_id} />
+        <CategoryManager storeId={store.user_id} storeBrandName={store.brand_name} />
+        <ProductManager storeId={store.user_id} storeBrandName={store.brand_name}/>
       </main>
     </div>
   );
