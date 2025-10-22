@@ -5,7 +5,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
+const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit, storeBrandName }) => {
   const { getToken } = useAuth();
   const { user } = useUser();
 
@@ -116,7 +116,7 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit }) => {
       // Subir imágenes nuevas
       for (let file of images) {
         const fileName = `${Date.now()}-${file.name}`;
-        const filePath = `wapedidos/products/${fileName}`;
+        const filePath = `${storeBrandName}/products/${fileName}`;
         const { error: uploadError } = await supabase.storage.from('wapedidos').upload(filePath, file);
         if (uploadError) throw uploadError;
 

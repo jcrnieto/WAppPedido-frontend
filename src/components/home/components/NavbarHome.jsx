@@ -45,7 +45,10 @@ const NavbarHome = () => {
               Iniciar Sesión
             </a>
             <a
-              onClick={() => navigate('/register')}
+              onClick={() => {
+                localStorage.setItem("signupIntent", "pro");     
+                navigate('/register?plan=pro');                  
+              }}
               className="px-5 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-secondary transition-colors"
             >
               Registrarse
@@ -107,84 +110,4 @@ const NavbarHome = () => {
 
 export default NavbarHome;
 
-//   return (
-//     <nav className="bg-green-600 text-white px-6 py-4 shadow-md">
-//       <div className="max-w-7xl mx-auto flex justify-between items-center">
-//         <h1 className="text-xl font-bold">WA PEDIDOS</h1>
-
-//         {/* Desktop nav */}
-//         <ul className="hidden md:flex gap-6">
-//           {navItems.map((item) => (
-//             <li key={item.href}>
-//               {item.isLogin ? (
-//                 <button
-//                   onClick={() => navigate("/login")}
-//                   className="bg-white text-green-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
-//                 >
-//                   {item.label}
-//                 </button>
-//               ) : (
-//                 <a href={item.href} className="hover:underline">
-//                   {item.label}
-//                 </a>
-//               )}
-//             </li>
-//           ))}
-//         </ul>
-
-//         {/* Mobile menu button */}
-//         <button
-//           onClick={toggleMenu}
-//           className="md:hidden focus:outline-none"
-//           aria-label="Abrir menú"
-//         >
-//           <svg
-//             className="w-6 h-6"
-//             fill="none"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             viewBox="0 0 24 24"
-//           >
-//             <path
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//               d="M4 6h16M4 12h16M4 18h16"
-//             />
-//           </svg>
-//         </button>
-//       </div>
-
-//       {/* Mobile nav dropdown */}
-//       {open && (
-//         <ul className="md:hidden mt-4 space-y-2">
-//           {navItems.map((item) => (
-//             <li key={item.href}>
-//               {item.isLogin ? (
-//                 <button
-//                   onClick={() => {
-//                     setOpen(false);
-//                     navigate("/login");
-//                   }}
-//                   className="w-full text-left block px-4 py-2 bg-white text-green-600 font-semibold rounded hover:bg-gray-100"
-//                 >
-//                   {item.label}
-//                 </button>
-//               ) : (
-//                 <a
-//                   href={item.href}
-//                   className="block px-4 py-2 hover:bg-gray-700 rounded"
-//                   onClick={() => setOpen(false)}
-//                 >
-//                   {item.label}
-//                 </a>
-//               )}
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//     </nav>
-//   );
-// };
-
-// export default NavbarHome;
 

@@ -5,7 +5,7 @@ import AddProductForm from "../products/AddProductsForm";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const CategoryManager = ({ storeId }) => {
+const CategoryManager = ({ storeId, storeBrandName }) => {
   const [categories, setCategories] = useState([]);
   const [editingCategory, setEditingCategory] = useState(null);
   const [openCategoryId, setOpenCategoryId] = useState(null);
@@ -177,6 +177,7 @@ const CategoryManager = ({ storeId }) => {
       <div>
         <AddCategoryForm
           storeId={storeId}
+          storeBrandName={storeBrandName}
           category={editingCategory}
           onSuccess={handleFormCategorySuccess}
           onCancelEdit={() => setEditingCategory(null)}

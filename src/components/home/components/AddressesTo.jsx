@@ -31,7 +31,11 @@ const AddresedTo = () => {
           <div className="mt-8 flex gap-4">
             <button
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md"
-              onClick={() => navigate('/register')}
+              // onClick={() => navigate('/register')}
+              onClick={() => {
+                localStorage.setItem("signupIntent", "trial");     // <- persistimos
+                navigate('/register?plan=trial');                  // <- opcionalmente vía query
+              }}
             >
               Empieza Gratis
             </button>

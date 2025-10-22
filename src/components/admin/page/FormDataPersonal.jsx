@@ -4,6 +4,8 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const mpLink = import.meta.env.VITE_MP_PRO_LINK;
+console.log('mpLink:', mpLink);
 
 const FormDataPersonal = () => {
     const { user } = useUser();
@@ -28,6 +30,17 @@ const FormDataPersonal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // // 1) Abrí la pestaña ANTES de cualquier await para evitar popup blocker
+        // const mpWin = window.open('', '_blank', 'noopener'); // pestaña en blanco
+
+        if (!mpLink || !/^https?:\/\//.test(mpLink)) {
+            alert('Link de suscripción no configurado');
+            return;
+        }
+
+        // abrir en el gesto del usuario, evita bloqueos
+        const mpWin = window.open(mpLink, '_blank');
 
         if (!user || !email) {
             console.error('❌ Usuario no cargado');
@@ -59,13 +72,25 @@ const FormDataPersonal = () => {
 
             console.log('✅ Datos guardados en Supabase:', response.data);
 
+            // // 2) Redirigí la pestaña que ya abriste a Mercado Pago
+            // if (mpWin && !mpWin.closed) mpWin.location.href = mpLink;
+
             const formattedUrl = form.brand_name.trim().toLowerCase().replace(/\s+/g, '-');
             const adminUrl = `/admin/${formattedUrl}`;
             const publicUrl = `/${formattedUrl}`;
 
             window.location.href = adminUrl;
 
+            // const mpLink = import.meta.env.VITE_MP_PRO_LINK;
+            // console,log('mpLink:', mpLink);
+
+            // // abre MP en nueva pestaña y redirige a admin
+            // window.open(mpLink, '_blank');     // gesto del usuario → evita popup blocker
+            // window.location.href = adminUrl;   // tu app sigue
+
         } catch (error) {
+            // Si falló, cerrá la pestaña abierta y logueá
+            if (mpWin && !mpWin.closed) mpWin.close();
             console.error('❌ Error al enviar datos personales:', error);
         }
     };
