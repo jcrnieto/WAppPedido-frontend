@@ -95,7 +95,9 @@ const NavbarHome = () => {
               </a>
               <a
                 href="#contacto"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false), 
+                  localStorage.setItem("signupIntent", "pro"); navigate('/register?plan=pro');}}
                 className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-secondary transition-colors text-center"
               >
                 Registrarse
