@@ -1,16 +1,18 @@
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useAuth } from '@clerk/clerk-react';
 import { useState } from 'react';
 
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const mpLink = import.meta.env.VITE_MP_PRO_LINK;
-console.log('mpLink:', mpLink);
+// const mpLink = import.meta.env.VITE_MP_PRO_LINK;
+// console.log('mpLink:', mpLink);
 
 const FormDataPersonal = () => {
+    const { getToken } = useAuth();
     const { user } = useUser();
     const email = user?.emailAddresses?.[0]?.emailAddress;
     console.log('este es el email',email)
+
     const [form, setForm] = useState({
         full_name: '',
         phone: '',
@@ -31,21 +33,20 @@ const FormDataPersonal = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // // 1) Abrí la pestaña ANTES de cualquier await para evitar popup blocker
-        // const mpWin = window.open('', '_blank', 'noopener'); // pestaña en blanco
-
-        if (!mpLink || !/^https?:\/\//.test(mpLink)) {
-            alert('Link de suscripción no configurado');
-            return;
-        }
-
-        // abrir en el gesto del usuario, evita bloqueos
-        const mpWin = window.open(mpLink, '_blank');
+        // if (!mpLink || !/^https?:\/\//.test(mpLink)) {
+        //     alert('Link de suscripción no configurado');
+        //     return;
+        // }
+        // 1) una nueva pestaña a Mercado Pago
+        // const mpWin = window.open(mpLink, '_blank');
 
         if (!user || !email) {
             console.error('❌ Usuario no cargado');
             return;
         }
+
+        const token = await getToken();
+        const headers = { Authorization: `Bearer ${token}` };
 
         try {
             const { data } = await axios.get(`${baseUrl}/users/by-email/${email}`);
@@ -72,25 +73,33 @@ const FormDataPersonal = () => {
 
             console.log('✅ Datos guardados en Supabase:', response.data);
 
-            // // 2) Redirigí la pestaña que ya abriste a Mercado Pago
-            // if (mpWin && !mpWin.closed) mpWin.location.href = mpLink;
+            // pedir link dinámico (con external_reference=user_id)
+            const { data: linkRes } = await axios.post(
+                `${baseUrl}/account/create-subscription-link`,
+                {},
+                { headers }
+            );
+            const link = linkRes?.link;
+            if (!link) throw new Error('No se pudo generar link de suscripción');
 
+            const mpWin = window.open(link, '_blank');
+
+            // marcar estado pending
+            await axios.post(`${baseUrl}/account/mark-pending`, { user_id: supabaseUserId }, { headers });
+
+            // enviar pestaña a Mercado Pago y redirigir admin
+            if (mpWin && !mpWin.closed) mpWin.location.href = link;
+
+             // Redirigír admin automáticamente
             const formattedUrl = form.brand_name.trim().toLowerCase().replace(/\s+/g, '-');
             const adminUrl = `/admin/${formattedUrl}`;
-            const publicUrl = `/${formattedUrl}`;
+            // const publicUrl = `/${formattedUrl}`;
 
             window.location.href = adminUrl;
 
-            // const mpLink = import.meta.env.VITE_MP_PRO_LINK;
-            // console,log('mpLink:', mpLink);
-
-            // // abre MP en nueva pestaña y redirige a admin
-            // window.open(mpLink, '_blank');     // gesto del usuario → evita popup blocker
-            // window.location.href = adminUrl;   // tu app sigue
-
         } catch (error) {
             // Si falló, cerrá la pestaña abierta y logueá
-            if (mpWin && !mpWin.closed) mpWin.close();
+            // if (mpWin && !mpWin.closed) mpWin.close();
             console.error('❌ Error al enviar datos personales:', error);
         }
     };
