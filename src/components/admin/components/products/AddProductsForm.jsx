@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { supabase } from '../../../../config/supabaseConfig';
 import { useAuth, useUser } from "@clerk/clerk-react";
+import { toast } from 'sonner';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -160,11 +161,18 @@ const AddProductForm = ({ storeId, product, onSuccess, onCancelEdit, storeBrandN
       setImages([]);
       setImagesPreview([]);
 
-      alert('✅ Producto guardado');
+      toast.success('✅ Producto guardado');
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error('❌ Error:', err.message);
-      alert('Ocurrió un error');
+      const r = err?.response;
+      if (r?.status === 402) {
+        toast.error(r.data?.message || 'Plan inactivo');
+        if (r.data?.code === 'CHECKOUT_INCOMPLETE') router.push('/billing');
+        return;
+      }
+      toast.error('Error inesperado');
+      // console.error('❌ Error:', err.message);
+      // alert('Ocurrió un error');
     } finally {
       setLoading(false);
     }
