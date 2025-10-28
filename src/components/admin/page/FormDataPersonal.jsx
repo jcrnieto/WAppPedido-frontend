@@ -62,14 +62,15 @@ const FormDataPersonal = () => {
             console.log('user', user);
 
             const response = await axios.post(`${baseUrl}/personalData/createPersonalData`, {
-                user_id: supabaseUserId,
-                full_name: form.full_name,
-                phone: form.phone,
-                address: form.address,
-                city: form.city,
-                brand_name: form.brand_name,
-                auth_user_id: user.id,
-            });
+                    user_id: supabaseUserId,
+                    full_name: form.full_name,
+                    phone: form.phone,
+                    address: form.address,
+                    city: form.city,
+                    brand_name: form.brand_name,
+                    auth_user_id: user.id,
+                } , { headers }
+            );
 
             console.log('✅ Datos guardados en Supabase:', response.data);
 
