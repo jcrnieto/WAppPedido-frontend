@@ -4,14 +4,14 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-// const mpLink = import.meta.env.VITE_MP_PRO_LINK;
-// console.log('mpLink:', mpLink);
+const DEFAULT_AMOUNT = Number(import.meta.env.VITE_MP_AMOUNT ?? 200);
 
 const FormDataPersonal = () => {
+
     const { getToken } = useAuth();
     const { user } = useUser();
     const email = user?.emailAddresses?.[0]?.emailAddress;
-    console.log('este es el email',email)
+    // console.log('este es el email',email)
 
     const [form, setForm] = useState({
         full_name: '',
@@ -33,13 +33,6 @@ const FormDataPersonal = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // if (!mpLink || !/^https?:\/\//.test(mpLink)) {
-        //     alert('Link de suscripción no configurado');
-        //     return;
-        // }
-        // 1) una nueva pestaña a Mercado Pago
-        // const mpWin = window.open(mpLink, '_blank');
-
         if (!user || !email) {
             console.error('❌ Usuario no cargado');
             return;
@@ -57,9 +50,9 @@ const FormDataPersonal = () => {
                 return;
             }
 
-            console.log('Supabase User ID:', supabaseUserId);
-            console.log('Form Data:', form);
-            console.log('user', user);
+            // console.log('Supabase User ID:', supabaseUserId);
+            // console.log('Form Data:', form);
+            // console.log('user', user);
 
             const response = await axios.post(`${baseUrl}/personalData/createPersonalData`, {
                     user_id: supabaseUserId,
@@ -72,35 +65,31 @@ const FormDataPersonal = () => {
                 } , { headers }
             );
 
-            console.log('✅ Datos guardados en Supabase:', response.data);
+            // console.log('✅ Datos guardados en Supabase:', response.data);
 
-            // pedir link dinámico (con external_reference=user_id)
+            // persistir slug para usarlo al volver de MP
+            const slug = form.brand_name.trim().toLowerCase().replace(/\s+/g, '-');
+            localStorage.setItem('brand_slug', slug);
+
+             // pedir link dinámico y redirigir a Mercado Pago
             const { data: linkRes } = await axios.post(
                 `${baseUrl}/account/create-subscription-link`,
-                {},
+                { amount: DEFAULT_AMOUNT },
                 { headers }
             );
-            const link = linkRes?.link;
-            if (!link) throw new Error('No se pudo generar link de suscripción');
+            const initPoint = linkRes?.init_point;
+            if (!initPoint) throw new Error('No se pudo generar link de suscripción');
 
-            const mpWin = window.open(link, '_blank');
+            // redirección directa (misma pestaña)
+            window.location.replace(initPoint);
 
-            // marcar estado pending
-            await axios.post(`${baseUrl}/account/mark-pending`, { user_id: supabaseUserId }, { headers });
-
-            // enviar pestaña a Mercado Pago y redirigir admin
-            if (mpWin && !mpWin.closed) mpWin.location.href = link;
-
-             // Redirigír admin automáticamente
-            const formattedUrl = form.brand_name.trim().toLowerCase().replace(/\s+/g, '-');
-            const adminUrl = `/admin/${formattedUrl}`;
+            // const formattedUrl = form.brand_name.trim().toLowerCase().replace(/\s+/g, '-');
+            // const adminUrl = `/admin/${formattedUrl}`;
             // const publicUrl = `/${formattedUrl}`;
 
-            window.location.href = adminUrl;
+            // window.location.href = adminUrl;
 
         } catch (error) {
-            // Si falló, cerrá la pestaña abierta y logueá
-            // if (mpWin && !mpWin.closed) mpWin.close();
             console.error('❌ Error al enviar datos personales:', error);
         }
     };
